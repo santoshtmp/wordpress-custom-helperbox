@@ -1,0 +1,39 @@
+{
+  "name": "seap/glossary",
+  "title": "Glossary",
+  "description": "Glossary section",
+  "attributes": {
+    "align": {
+      "type": "string",
+      "default": "none"
+    }
+  },
+  "supports": {
+    "align": [
+      "wide"
+    ],
+    "anchor": false,
+    "className": true,
+    "mode": false
+  },
+  "example": {
+    "attributes": {
+      "align": {
+        "type": "string",
+        "default": "none"
+      }
+    }
+  },
+  "viewScript": ["glossary"],
+  "editorScript": [],
+  "editorStyle": [],
+  "category": "seap",
+  "icon": "",
+  "keywords": [
+    "glossary"
+  ],
+  "acf": {
+    "mode": "auto",
+    "renderTemplate": "template.php"
+  }
+}

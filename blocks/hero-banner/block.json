@@ -1,0 +1,34 @@
+{
+  "name": "seap/hero",
+  "title": "Hero Banner",
+  "description": "Hero Banner",
+  "attributes": {
+    "align": {
+      "type": "string",
+      "default": "full"
+    }
+  },
+  "supports": {
+    "align": ["full"],
+    "anchor": true,
+    "className": true,
+    "mode": false
+  },
+  "example": {
+    "attributes": {
+      "align": {
+        "type": "string",
+        "default": "full"
+      }
+    }
+  },
+  "style": "hero-banner-css",
+  "script": ["gsap-library", "hero-banner-front"],
+  "category": "home",
+  "icon": "admin-comments",
+  "keywords": ["hero", "banner"],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "template.php"
+  }
+}
