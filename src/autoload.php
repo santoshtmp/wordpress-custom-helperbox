@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 spl_autoload_register(function ($class) {
 
-    $prefix = 'wp_helperbox\\';
+    $prefix = 'Helperbox_Plugin\\';
     $base_dir = __DIR__ . '/classes/';
 
     // Only load our own classes
@@ -24,5 +24,21 @@ spl_autoload_register(function ($class) {
     // check if file exist
     if (file_exists($file)) {
         require_once $file;
+    } else {
+        $path = explode(
+            '\\',
+            str_replace('_', '-', strtolower($relative_class))
+        );
+
+        $last_key = array_key_last($path);
+        $path[$last_key] = sprintf('class-%s', $path[$last_key]);
+
+        $file = $base_dir . implode('/', $path) . '.php';
+
+        if (is_readable($file)) {
+            require_once $file;
+        }
     }
 });
+
+

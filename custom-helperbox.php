@@ -2,10 +2,10 @@
 
 /*
 Plugin Name: Custom Helper Box
-Description: 
+Description: Custom Helper Box provides the custom functions and features.
 Contributors: santoshtmp7
-Plugin URI: 
-Tags: block, API, functions, security
+Plugin URI: https://github.com/santoshtmp/wordpress-custom-helperbox
+Tags: settings, functions, security
 Version: 1.0
 Author: santoshtmp7
 Author URI: 
@@ -18,7 +18,8 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
-use wp_helperbox\helperbox_settings;
+use Helperbox_Plugin\admin\Settings;
+use Helperbox_Plugin\Securities;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
@@ -39,6 +40,10 @@ if (!defined('helperbox_basename')) {
 require_once __DIR__ . '/src/autoload.php';
 
 // 
-if (class_exists(helperbox_settings::class)) {
-    new helperbox_settings();
+if (class_exists(Settings::class)) {
+    new Settings();
 }
+if (class_exists(Securities::class)) {
+    new Securities();
+}
+

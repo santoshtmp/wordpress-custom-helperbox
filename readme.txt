@@ -1,6 +1,6 @@
 === Custom Helper Box ===
 Contributors: santoshtmp7
-Tags: block, API, functions, security
+Tags: settings, functions, security
 Author: santoshtmp7
 Author URI: https://github.com/santoshtmp
 Plugin URI: https://github.com/santoshtmp/wordpress-custom-helperbox
