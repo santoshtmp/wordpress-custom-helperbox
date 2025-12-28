@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Helperbox User Role
+ *
+ * @package helperbox
+ * 
+ */
 
 namespace Helperbox_Plugin;
 

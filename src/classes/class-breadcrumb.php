@@ -1,13 +1,17 @@
 <?php
+/**
+ * Helperbox Breadcrumb
+ *
+ * @package helperbox
+ * 
+ */
 
 namespace Helperbox_Plugin;
-
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
 }
-
 
 /**
  * breadcrumb main class

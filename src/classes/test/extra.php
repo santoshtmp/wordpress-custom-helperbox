@@ -18,63 +18,11 @@ if (! class_exists('YIPL_EXTRA')) {
          */
         function __construct() {
             // 
-            add_action('init', [$this, 'init_action'], 10);
-            add_action('login_enqueue_scripts', [$this, 'login_logo'], 10);
-            add_filter('login_headerurl', [$this, 'logo_url'], 10);
             add_filter('theme_page_templates', [$this, 'register_page_templates']);
             add_filter('page_template_hierarchy', [$this, 'page_template_to_subdir']);
         }
-        /**
-         * Init action
-         * 
-         * @return void
-         */
-        public function init_action() {
-            // Disable emojis
-            $this->disable_wp_emojicons();
-        }
 
-        /**
-         * Login logo
-         * 
-         * @return void
-         */
-        function login_logo() {
-            $custom_logo_id = get_theme_mod('custom_logo');
-            $url = $custom_logo_id ? wp_get_attachment_image_src($custom_logo_id, 'full') : '';
-            wp_enqueue_style('yi-login', get_stylesheet_directory_uri() . '/assets/login/login.css');
-
-            if ($url) { ?>
-                <style type="text/css">
-                    #login h1 a,
-                    .login h1 a {
-                        background-image: url('<?php echo $url[0]; ?>');
-                    }
-                </style>
-<?php
-            }
-
-            wp_enqueue_script(
-                'custom-login',
-                get_stylesheet_directory_uri() . '/assets/login/login.js',
-                array('jquery'),
-                filemtime(get_stylesheet_directory() . '/assets/login/login.js'),
-                array(
-                    'strategy' => 'defer',
-                    'in_footer' => true,
-                )
-            );
-        }
-
-        /**
-         * Logo URL
-         * 
-         * @return string Home URL
-         */
-        function logo_url() {
-            return home_url();
-        }
-
+    
         /**
          * ==============================
          * https://developer.wordpress.org/reference/hooks/theme_page_templates/ 
@@ -139,66 +87,9 @@ if (! class_exists('YIPL_EXTRA')) {
             return $templates;
         }
 
-        /**
-         * Disable emojis in WordPress
-         * 
-         * @return void
-         */
-        function disable_wp_emojicons() {
-            // Remove emoji script from header
-            remove_action('wp_head', 'print_emoji_detection_script', 7);
-            remove_action('admin_print_scripts', 'print_emoji_detection_script');
-            remove_action('wp_print_styles', 'print_emoji_styles');
-            remove_action('admin_print_styles', 'print_emoji_styles');
+      
 
-
-            // Remove emoji from TinyMCE editor
-            remove_filter('the_content', 'wp_staticize_emoji');
-            remove_filter('the_excerpt', 'wp_staticize_emoji');
-            remove_filter('comment_text', 'wp_staticize_emoji');
-            remove_filter('widget_text_content', 'wp_staticize_emoji');
-
-            // Remove emoji from RSS feed
-            remove_action('wp_mail', 'wp_staticize_emoji_for_email');
-            remove_action('the_content_feed', 'wp_staticize_emoji');
-            remove_action('comment_text_rss', 'wp_staticize_emoji');
-
-            // Remove emoji CDN path
-            add_filter('tiny_mce_plugins', [$this, 'disable_emojicons_tinymce']);
-            add_filter('wp_resource_hints', [$this, 'disable_emojis_remove_dns_prefetch'], 10, 2);
-        }
-
-        /**
-         * Disable emojis in TinyMCE editor
-         * 
-         * @param array $plugins 
-         * @return array Difference betwen the two arrays
-         */
-        function disable_emojicons_tinymce($plugins) {
-            if (is_array($plugins)) {
-                return array_diff($plugins, array('wpemoji'));
-            }
-            return array();
-        }
-
-
-        /**
-         * Remove emoji CDN hostname from DNS prefetching hints.
-         *
-         * @param array $urls URLs to print for resource hints.
-         * @param string $relation_type The relation type the URLs are printed for.
-         * @return array Difference betwen the two arrays.
-         */
-        function disable_emojis_remove_dns_prefetch($urls, $relation_type) {
-            if ('dns-prefetch' == $relation_type) {
-                /** This filter is documented in wp-includes/formatting.php */
-                $emoji_svg_url = apply_filters('emoji_svg_url', 'https://s.w.org/images/core/emoji/2/svg/');
-
-                $urls = array_diff($urls, array($emoji_svg_url));
-            }
-
-            return $urls;
-        }
+       
     }
 }
 // Instantiate the class

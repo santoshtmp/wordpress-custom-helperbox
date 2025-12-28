@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@wordpress/build": "^0.5.0"
+  }
+}

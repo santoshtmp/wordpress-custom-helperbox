@@ -4,8 +4,7 @@
 /*.zip
 /*.tar.gz
 
-# Node Modules
-node_modules
+
 
 .htaccess_backup_*
 /.htaccess
@@ -22,12 +21,14 @@ node_modules
 .unison*
 
 # Nodejs log files
-wp-content/themes/logs
+# Node Modules
+node_modules
 *.log
 npm-debug.
 yarn-debug
 yarn-error
 lerna-debu
+yarn.lock
 
 
 # .htaccess

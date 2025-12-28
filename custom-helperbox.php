@@ -19,6 +19,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 use Helperbox_Plugin\admin\Settings;
+use Helperbox_Plugin\Assets;
 use Helperbox_Plugin\Securities;
 
 if (!defined('ABSPATH')) {
@@ -45,4 +46,7 @@ if (class_exists(Settings::class)) {
 }
 if (class_exists(Securities::class)) {
     new Securities();
+}
+if (class_exists(Assets::class)) {
+    new Assets();
 }

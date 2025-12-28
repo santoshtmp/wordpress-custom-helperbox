@@ -1,4 +1,10 @@
 <?php
+/**
+ * Helperbox admin settings
+ *
+ * @package helperbox
+ * 
+ */
 
 namespace Helperbox_Plugin\admin;
 
@@ -353,13 +359,33 @@ class Settings {
                         </label>
                     </th>
                     <td>
-                        <input
-                            type="checkbox"
-                            name="helperbox_disable_phpexecution_upload_dir"
-                            id="helperbox_disable_phpexecution_upload_dir"
-                            value="1"
-                            <?php checked(get_option('helperbox_disable_phpexecution_upload_dir')); ?>>
-                        <p class="description">This will disable PHP execution through uploads directory.</p>
+                        <?php
+                        $check_nginx = stripos($_SERVER['SERVER_SOFTWARE'] ?? '', 'nginx');
+                        if ($check_nginx === 0 && $check_nginx !== false) {
+                        ?>
+                            <div class="description">
+                                <p> Your server is running Nginx.
+                                    PHP execution in uploads cannot be disabled automatically.
+                                    Please add this rule to your Nginx config:</p>
+                                <pre>location ~* ^/wp-content/uploads/.*\.php$ { deny all; }</pre>
+                            </div>
+                        <?php
+                        } else {
+                        ?>
+                            <input
+                                type="checkbox"
+                                name="helperbox_disable_phpexecution_upload_dir"
+                                id="helperbox_disable_phpexecution_upload_dir"
+                                value="1"
+                                <?php checked(get_option('helperbox_disable_phpexecution_upload_dir')); ?>>
+                            <div class="description">
+                                <p> This will disable PHP execution through uploads directory.</p>
+                            </div>
+
+                        <?php
+                        }
+
+                        ?>
                     </td>
                 </tr>
             </table>

@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Helperbox Securities
+ *
+ * @package helperbox
+ * 
+ */
+
 namespace Helperbox_Plugin;
 
 use WP_Error;
@@ -24,6 +31,7 @@ class Securities {
      */
     function __construct() {
         // 
+        add_action('init', [$this, 'init_action'], 10);
         add_action('send_headers', [$this, 'header_protection'], 10);
         add_filter('rest_authentication_errors',  [$this, 'rest_authentication_auth']);
         add_action('admin_bar_menu', [$this, 'modify_top_admin_bar_menu'], 99);
@@ -79,6 +87,16 @@ class Securities {
                 }
             }
         });
+    }
+
+    /**
+     * Init action
+     * 
+     * @return void
+     */
+    public function init_action() {
+        // Disable emojis
+        $this->disable_wp_emojicons();
     }
 
     /**
@@ -256,6 +274,63 @@ class Securities {
         if (get_option('helperbox_disallow_file', '1') == '1') {
             $wp_admin_bar->remove_node('updates');
         }
+    }
+
+
+    /**
+     * Disable emojis in WordPress
+     * 
+     * @return void
+     */
+    function disable_wp_emojicons() {
+        // Remove emoji script from header
+        remove_action('wp_head', 'print_emoji_detection_script', 7);
+        remove_action('admin_print_scripts', 'print_emoji_detection_script');
+        remove_action('wp_print_styles', 'print_emoji_styles');
+        remove_action('admin_print_styles', 'print_emoji_styles');
+
+
+        // Remove emoji from TinyMCE editor
+        remove_filter('the_content', 'wp_staticize_emoji');
+        remove_filter('the_excerpt', 'wp_staticize_emoji');
+        remove_filter('comment_text', 'wp_staticize_emoji');
+        remove_filter('widget_text_content', 'wp_staticize_emoji');
+
+        // Remove emoji from RSS feed
+        remove_action('wp_mail', 'wp_staticize_emoji_for_email');
+        remove_action('the_content_feed', 'wp_staticize_emoji');
+        remove_action('comment_text_rss', 'wp_staticize_emoji');
+
+        // Remove emoji CDN path
+        /**
+         * Disable emojis in TinyMCE editor
+         * 
+         * @param array $plugins 
+         * @return array Difference betwen the two arrays
+         */
+        add_filter('tiny_mce_plugins',  function ($plugins) {
+            if (is_array($plugins)) {
+                return array_diff($plugins, array('wpemoji'));
+            }
+            return array();
+        });
+        /**
+         * Remove emoji CDN hostname from DNS prefetching hints.
+         *
+         * @param array $urls URLs to print for resource hints.
+         * @param string $relation_type The relation type the URLs are printed for.
+         * @return array Difference betwen the two arrays.
+         */
+        add_filter('wp_resource_hints',  function ($urls, $relation_type) {
+            if ('dns-prefetch' == $relation_type) {
+                /** This filter is documented in wp-includes/formatting.php */
+                $emoji_svg_url = apply_filters('emoji_svg_url', 'https://s.w.org/images/core/emoji/2/svg/');
+
+                $urls = array_diff($urls, array($emoji_svg_url));
+            }
+
+            return $urls;
+        }, 10, 2);
     }
 
 
