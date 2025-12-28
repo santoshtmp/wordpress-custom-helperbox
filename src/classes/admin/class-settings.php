@@ -29,7 +29,6 @@ class Settings {
         add_filter('plugin_action_links_' . helperbox_basename, [$this, 'helperbox_settings_link']);
         add_action('admin_init', [$this, 'helperbox_settings_init']);
         add_action('admin_menu', [$this, 'helperbox_submenu']);
-
     }
 
     /**
@@ -67,7 +66,29 @@ class Settings {
             ]
         );
 
-        // Sanitize the helperbox_comment_feature as an boolen
+        // Sanitize the post types as an array of strings
+        register_setting(
+            $settings_option_group,
+            'ptreq_post_types',
+            [
+                'type' => 'array',
+                'sanitize_callback' => [$this, 'helperbox_sanitize_post_types'],
+                'default' => []
+            ]
+        );
+
+        // breadcrumb feature settings
+        register_setting(
+            $settings_option_group,
+            'helperbox_breadcrumb_feature',
+            [
+                'type'              => 'boolean',
+                'sanitize_callback' => 'rest_sanitize_boolean',
+                'default'           => true,
+            ]
+        );
+
+        // security settings 
         register_setting(
             $settings_option_group,
             'helperbox_comment_feature',
@@ -78,10 +99,9 @@ class Settings {
             ]
         );
 
-        // Sanitize the helperbox_disallow_file as an boolen
         register_setting(
             $settings_option_group,
-            'helperbox_disallow_file',
+            'helperbox_disable_restapi_unauthenticated_user',
             [
                 'type'              => 'boolean',
                 'sanitize_callback' => 'rest_sanitize_boolean',
@@ -89,14 +109,13 @@ class Settings {
             ]
         );
 
-        // Sanitize the post types as an array of strings
         register_setting(
             $settings_option_group,
-            'ptreq_post_types',
+            'helperbox_disallow_file',
             [
-                'type' => 'array',
-                'sanitize_callback' => [$this, 'helperbox_sanitize_post_types'],
-                'default' => []
+                'type'              => 'boolean',
+                'sanitize_callback' => 'rest_sanitize_boolean',
+                'default'           => true,
             ]
         );
     }
@@ -122,32 +141,44 @@ class Settings {
         // Register metaboxes right before rendering (since add_meta_boxes won't fire)
         add_meta_box(
             'helperbox_general_settings',
-            'General Settings',
+            'Custom Helper Box Settings',
             [$this, 'render_helperbox_general_settings_box'],
             'helperbox_settings_page',
             'normal',
             'default'
-        ); ?>
+        );
+        $check_update_status = $_GET['check_update_status'] ?? 'false';
+        $active_tab = $_GET['tab'] ?? 'general';
+
+?>
         <div class="wrap">
             <h1 class="wp-heading-inline">Custom Helper Box</h1>
-            <form method="post" action="options.php">
-                <?php
-                settings_fields('helperbox_settings_group');
-                ?>
-                <div id="poststuff">
-                    <div id="post-body" class="metabox-holder columns-2">
-                        <div id="post-body-content">
-                            <?php
-                            do_meta_boxes('helperbox_settings_page', 'normal', null);
-                            submit_button();
-                            ?>
+            <?php
+            if ($active_tab == 'security' && $check_update_status == 'true'):
+                $this->helperbox_render_update_status_list();
+            else: ?>
+                <form method="post" action="options.php">
+                    <?php
+                    settings_fields('helperbox_settings_group');
+                    ?>
+                    <div id="poststuff">
+                        <div id="post-body" class="metabox-holder columns-2">
+                            <div id="post-body-content">
+                                <?php
+                                do_meta_boxes('helperbox_settings_page', 'normal', null);
+                                submit_button();
+                                ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            <?php
+            endif;
+            ?>
         </div>
     <?php
     }
+
 
 
     /**
@@ -155,56 +186,285 @@ class Settings {
      */
     function render_helperbox_general_settings_box() {
 
+        $active_tab = $_GET['tab'] ?? 'general';
+
     ?>
-        <table class="form-table" role="presentation">
-            <tr>
-                <th scope="row">
-                    <label for="helperbox_comment_feature">
-                        Disable comment feature completely
-                    </label>
-                </th>
-                <td>
-                    <input
-                        type="checkbox"
-                        name="helperbox_comment_feature"
-                        id="helperbox_comment_feature"
-                        value="1"
-                        <?php checked(get_option('helperbox_comment_feature', '1')); ?>>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">
-                    <label for="helperbox_disallow_file">
-                        Disallow file modifications through admin interface
-                    </label>
-                </th>
-                <td>
-                    <input
-                        type="checkbox"
-                        name="helperbox_disallow_file"
-                        id="helperbox_disallow_file"
-                        value="1"
-                        <?php checked(get_option('helperbox_disallow_file', '1')); ?>>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">
-                    <label for="ptreq_character_limit">Minimun Post Title Character Limit</label>
-                </th>
-                <td>
-                    <?php $option = (int)get_option('ptreq_character_limit');
-                    if (!$option) {
-                        $option = 100;
-                    } ?>
-                    <input type="number" name="ptreq_character_limit" id="ptreq_character_limit" value="<?php echo esc_attr($option); ?>" class="regular-text" placeholder="100">
-                    <p class="description">Default title character limit is 100.</p>
-                </td>
-            </tr>
-        </table>
-<?php
+        <h3 class="nav-tab-wrapper">
+            <a href="?page=helperbox&tab=general"
+                class="nav-tab <?php echo ($active_tab === 'general') ? 'nav-tab-active' : ''; ?>">
+                General
+            </a>
+
+            <a href="?page=helperbox&tab=breadcrumb"
+                class="nav-tab <?php echo ($active_tab === 'breadcrumb') ? 'nav-tab-active' : ''; ?>">
+                Breadcrumb
+            </a>
+
+            <a href="?page=helperbox&tab=security"
+                class="nav-tab <?php echo ($active_tab === 'security') ? 'nav-tab-active' : ''; ?>">
+                Security
+            </a>
+        </h3>
+
+        <?php if ($active_tab === 'general') { ?>
+            <table class="form-table">
+                <tr>
+                    <th scope="row">
+                        <label for="ptreq_post_types">
+                            Select Post Types To Apply Title Character Limit.
+                        </label>
+                    </th>
+                    <td>
+                        <?php
+                        $option = (get_option('ptreq_post_types')) ?: [];
+                        $post_types = get_post_types(['public'   => true], 'objects');
+                        // unset($post_types['attachment']);
+                        foreach ($post_types  as $key => $value) {
+                            $checked = '';
+                            if (in_array($value->name, $option)) {
+                                $checked = 'Checked';
+                            }
+                        ?>
+                            <label for="post-type-<?php echo esc_attr($key); ?>">
+                                <input type="checkbox" name="ptreq_post_types[]" id="post-type-<?php echo esc_attr($key); ?>" value="<?php echo esc_attr($value->name); ?>" <?php echo esc_attr($checked); ?> <?php checked(in_array($value->name, $option)); ?>>
+                                <?php echo esc_attr($value->label); ?>
+                            </label>
+                        <?php
+                        }
+                        echo '<p class="description">Title required character limit will only apply to selected post type. If all post type are unchecked, it will apply to all post type.</p>';
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <p>Other availables add on plugins:</p>
+
+                    </th>
+                    <td>
+                        <ol>
+                            <li>"Post Title Required" available at
+                                <a href="https://wordpress.org/plugins/post-title-required/" target="_blank">wordpress.org</a>
+                                and
+                                <a href="https://github.com/santoshtmp/wordpress-post-title-required" target="_blank">Github</a>
+                            </li>
+                            <li>"Citation Note" available at
+                                <a href="https://wordpress.org/plugins/citation-note/" target="_blank">wordpress.org</a>
+                                and
+                                <a href="https://github.com/santoshtmp/wordpress-citation-note" target="_blank">Github</a>
+                            </li>
+                            <li>"CSF - Custom Search Filter" available at <a href="https://github.com/santoshtmp/wordpress-custom-search-filter" target="_blank">Github</a> </li>
+                            <li>"Restore & Clean Media" available at <a href="https://github.com/santoshtmp/wordpress-restore-media-clean-data" target="_blank">Github</a> </li>
+
+                        </ol>
+                    </td>
+                </tr>
+
+            </table>
+        <?php } elseif ($active_tab === 'breadcrumb') { ?>
+            <table class="form-table" table-tab="breadcrumb">
+                <tr>
+                    <th scope="row">
+                        <label for="helperbox_breadcrumb_feature">
+                            Acivate Helpbox Breadcrumb
+                        </label>
+                    </th>
+                    <td>
+                        <input
+                            type="checkbox"
+                            name="helperbox_breadcrumb_feature"
+                            id="helperbox_breadcrumb_feature"
+                            value="1"
+                            <?php checked(get_option('helperbox_breadcrumb_feature', '1')); ?>>
+                    </td>
+                </tr>
+
+            </table>
+        <?php } elseif ($active_tab === 'security') { ?>
+            <table class="form-table" table-tab='security'>
+                <tr>
+                    <th scope="row">
+                        <label for="helperbox_comment_feature">
+                            Disable comment feature completely
+                        </label>
+                    </th>
+                    <td>
+                        <input
+                            type="checkbox"
+                            name="helperbox_comment_feature"
+                            id="helperbox_comment_feature"
+                            value="1"
+                            <?php checked(get_option('helperbox_comment_feature', '1')); ?>>
+                        <p class="description">This will remove edit-comments.php page and close comments feature completely.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="helperbox_disable_restapi_unauthenticated_user">
+                            Disable REST API for unauthenticated users
+                        </label>
+                    </th>
+                    <td>
+                        <input
+                            type="checkbox"
+                            name="helperbox_disable_restapi_unauthenticated_user"
+                            id="helperbox_disable_restapi_unauthenticated_user"
+                            value="1"
+                            <?php checked(get_option('helperbox_disable_restapi_unauthenticated_user', '1')); ?>>
+                        <p class="description">This will disable REST API for unauthenticated user. if "_nonce" is verified, it won't restrict.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="helperbox_disallow_file">
+                            Disallow file modifications through admin interface
+                        </label>
+                    </th>
+                    <td>
+                        <input
+                            type="checkbox"
+                            name="helperbox_disallow_file"
+                            id="helperbox_disallow_file"
+                            value="1"
+                            <?php checked(get_option('helperbox_disallow_file', '1')); ?>>
+                        <div class="description">
+                            <p> This option prevents all file modifications from the WordPress admin area. Plugin and theme installation, updates, and deletion will be disabled.</p>
+                            <ul>
+                                <li>You can still view available update versions on the <a href="/wp-admin/options-general.php?page=helperbox&tab=security&check_update_status=true" target="_blank"> Update Status</a> page.</li>
+                                <li>To apply updates, disable this option and then check for <a href="/wp-admin/update-core.php" target="_blank"> core, plugin, or theme updates.</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="helperbox_disable_phpexecution_upload_dir">
+                            Disable PHP execution through uploads directory
+                        </label>
+                    </th>
+                    <td>
+                        <input
+                            type="checkbox"
+                            name="helperbox_disable_phpexecution_upload_dir"
+                            id="helperbox_disable_phpexecution_upload_dir"
+                            value="1"
+                            <?php checked(get_option('helperbox_disable_phpexecution_upload_dir')); ?>>
+                        <p class="description">This will disable PHP execution through uploads directory.</p>
+                    </td>
+                </tr>
+            </table>
+        <?php
+            //
+        }
     }
 
 
+    /**
+     * 
+     */
+    function helperbox_render_update_status_list() {
+
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+        include_once ABSPATH . 'wp-admin/includes/update.php'; ?>
+
+        <div class="wrap">
+
+            <h2 class="wp-heading-inline">Update Status</h2>
+            <hr class="wp-header-end">
+
+            <!-- WordPress Core -->
+            <h3>WordPress Core</h3>
+            <?php
+            // Force refresh
+            wp_version_check();
+            $core_updates   = get_site_transient('update_core');
+            ?>
+            <table class="widefat striped">
+                <tbody>
+                    <tr>
+                        <th>Current Version</th>
+                        <td><?php echo esc_html($GLOBALS['wp_version']); ?></td>
+                    </tr>
+                    <?php if (!empty($core_updates->updates[0]->current)) : ?>
+                        <tr>
+                            <th>Available Version</th>
+                            <td><?php echo esc_html($core_updates->updates[0]->current); ?></td>
+                        </tr>
+                    <?php else : ?>
+                        <tr>
+                            <th>Status</th>
+                            <td>Up to date</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+
+            <!-- Plugins -->
+            <h3 style="margin-top:30px;">Plugin Updates</h3>
+            <?php
+            $installed_plugins = get_plugins();
+            wp_update_plugins();
+            $plugin_updates = get_site_transient('update_plugins');
+            if (!empty($plugin_updates->response)) : ?>
+                <table class="widefat striped">
+                    <thead>
+                        <tr>
+                            <th>Plugin</th>
+                            <th>Current Version</th>
+                            <th>New Version</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($plugin_updates->response as $key => $plugin) :
+                        ?>
+                            <tr>
+                                <td><?php echo esc_html($installed_plugins[$key]['Name']); ?></td>
+                                <td><?php echo esc_html($installed_plugins[$key]['Version']); ?></td>
+                                <td><?php echo esc_html($plugin->new_version); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else : ?>
+                <p>No plugin updates available.</p>
+            <?php endif; ?>
+
+            <!-- Themes -->
+            <h3 style="margin-top:30px;">Theme Updates</h3>
+            <?php
+            $installed_themes = wp_get_themes();
+            wp_update_themes();
+            $theme_updates  = get_site_transient('update_themes');
+            if (!empty($theme_updates->response)) : ?>
+                <table class="widefat striped">
+                    <thead>
+                        <tr>
+                            <th>Theme</th>
+                            <th>Current Version</th>
+                            <th>New Version</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($theme_updates->response as $key => $theme) : ?>
+                            <tr>
+                                <td><?php echo esc_html($installed_themes[$key]['Name']); ?></td>
+                                <td><?php echo esc_html($installed_themes[$key]['Version']); ?></td>
+                                <td><?php echo esc_html($theme['new_version']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else : ?>
+                <p>No theme updates available.</p>
+            <?php endif; ?>
+
+            <p style="margin-top:20px; color:#666;">
+                Updates are shown for reference only. File modifications are disabled.
+            </p>
+        </div>
+<?php
+    }
 
     // Sanitize the selected post types
     function helperbox_sanitize_post_types($input) {

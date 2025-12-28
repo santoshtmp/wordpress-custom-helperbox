@@ -31,6 +31,11 @@ class Breadcrumb {
      * Get breadcrumb array values
      */
     public static function helperbox_breadcrumb_value() {
+        // check setting
+        if (get_option('helperbox_breadcrumb_feature', '1') != '1') {
+            return;
+        }
+
         $breadcrumbs = [
             [
                 'title' => 'Home',
@@ -124,6 +129,10 @@ class Breadcrumb {
      * @return html breadcrumbs content
      */
     public static function get_helperbox_breadcrumb() {
+        // check setting
+        if (get_option('helperbox_breadcrumb_feature', '1') != '1') {
+            return;
+        }
         //don't show the breadcrumb in front page 
         if (is_front_page()) {
             return '';

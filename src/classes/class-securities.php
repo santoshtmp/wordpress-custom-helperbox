@@ -133,6 +133,12 @@ class Securities {
      * https://developer.wordpress.org/reference/hooks/rest_authentication_errors/
      */
     function rest_authentication_auth($access) {
+
+        // check setting
+        if (get_option('helperbox_disable_restapi_unauthenticated_user', '1') != '1') {
+            return;
+        }
+
         if (true === $access || is_wp_error($access)) {
             return $access;
         }
@@ -214,6 +220,26 @@ class Securities {
     }
 
     /**
+     * =========================================================
+     * Disable plugin installation, update
+     * To re-enable plugin installations or updates need to remove disable_plugin_modifications
+     * =========================================================
+     */
+    function disable_plugin_modifications() {
+
+        // check setting
+        if (get_option('helperbox_disallow_file', '1') != '1') {
+            return;
+        }
+
+        // Disable plugin and theme editor
+        define('DISALLOW_FILE_EDIT', true);
+
+        // Disable plugin and theme installation, updates, and deletion
+        define('DISALLOW_FILE_MODS', true);
+    }
+
+    /**
      * ================================================
      * https://developer.wordpress.org/reference/classes/wp_admin_bar/add_menu/
      * https://developer.wordpress.org/reference/classes/wp_admin_bar/remove_menu/
@@ -244,27 +270,6 @@ class Securities {
         unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_recent_comments']);
         unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_primary']);
         unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_quick_press']);
-    }
-
-
-    /**
-     * =========================================================
-     * Disable plugin installation, update
-     * To re-enable plugin installations or updates need to remove disable_plugin_modifications
-     * =========================================================
-     */
-    function disable_plugin_modifications() {
-
-        // check setting
-        if (get_option('helperbox_disallow_file', '1') != '1') {
-            return;
-        }
-
-        // Disable plugin and theme editor
-        define('DISALLOW_FILE_EDIT', true);
-
-        // Disable plugin and theme installation, updates, and deletion
-        define('DISALLOW_FILE_MODS', true);
     }
 }
 

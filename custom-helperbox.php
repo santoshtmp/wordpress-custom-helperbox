@@ -36,8 +36,8 @@ if (!defined('helperbox_basename')) {
     define('helperbox_basename', plugin_basename(__FILE__));
 }
 
-// load autoload classes
-require_once __DIR__ . '/src/autoload.php';
+// autoload classes
+require_once __DIR__ . '/src/helpers/autoload.php';
 
 // 
 if (class_exists(Settings::class)) {
