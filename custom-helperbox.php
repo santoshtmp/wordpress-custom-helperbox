@@ -46,4 +46,3 @@ if (class_exists(Settings::class)) {
 if (class_exists(Securities::class)) {
     new Securities();
 }
-

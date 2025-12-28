@@ -29,6 +29,7 @@ class Settings {
         add_filter('plugin_action_links_' . helperbox_basename, [$this, 'helperbox_settings_link']);
         add_action('admin_init', [$this, 'helperbox_settings_init']);
         add_action('admin_menu', [$this, 'helperbox_submenu']);
+        add_action('update_option_helperbox_disable_phpexecution_upload_dir', [$this, 'update_option_helperbox_disable_phpexecution_upload_dir'], 10, 2);
     }
 
     /**
@@ -112,6 +113,16 @@ class Settings {
         register_setting(
             $settings_option_group,
             'helperbox_disallow_file',
+            [
+                'type'              => 'boolean',
+                'sanitize_callback' => 'rest_sanitize_boolean',
+                'default'           => true,
+            ]
+        );
+
+        register_setting(
+            $settings_option_group,
+            'helperbox_disable_phpexecution_upload_dir',
             [
                 'type'              => 'boolean',
                 'sanitize_callback' => 'rest_sanitize_boolean',
@@ -265,7 +276,7 @@ class Settings {
                 <tr>
                     <th scope="row">
                         <label for="helperbox_breadcrumb_feature">
-                            Acivate Helpbox Breadcrumb
+                            Acivate Helperbox Breadcrumb
                         </label>
                     </th>
                     <td>
@@ -464,6 +475,73 @@ class Settings {
             </p>
         </div>
 <?php
+    }
+
+
+    /**
+     *  Runs ONLY when 'helperbox_disable_phpexecution_upload_dir' option is updated via options.php
+     */
+    public function update_option_helperbox_disable_phpexecution_upload_dir($old_value, $new_value) {
+        if ($old_value === $new_value) {
+            return; // Nothing changed
+        }
+
+        if ($old_value !== $new_value) {
+            $uploads_dir = WP_CONTENT_DIR . '/uploads';
+            $htaccess_file = $uploads_dir . '/.htaccess';
+            $htaccess_content = <<<HTACCESS
+# ---- Start Edit by Custom Helperbox ----
+# Disable PHP execution in uploads directory
+php_flag engine off
+<FilesMatch "\.php$">
+    Deny from all
+</FilesMatch>
+# ---- End Edit by Custom Helperbox ----
+HTACCESS;
+
+            // Add htaccess content when enabling
+            if ($new_value === true || $new_value == '1') {
+                // Create uploads dir if not exists
+                if (!is_dir($uploads_dir)) {
+                    mkdir($uploads_dir, 0755, true);
+                }
+                // Append or replace your block in .htaccess
+                if (file_exists($htaccess_file)) {
+                    $current = file_get_contents($htaccess_file);
+                    // Remove old block if exists
+                    $current = preg_replace(
+                        '/# ---- Start Edit by Custom Helperbox ----.*# ---- End Edit by Custom Helperbox ----\s*/s',
+                        '',
+                        $current
+                    );
+                    $current .= $htaccess_content . "\n";
+                    file_put_contents($htaccess_file, $current);
+                } else {
+                    file_put_contents($htaccess_file, $htaccess_content);
+                }
+            }
+
+            // Remove htaccess content when disabling
+            if ($new_value === false || $new_value === '' || $new_value === '0') {
+                //    remove htaccess content
+                if (file_exists($htaccess_file)) {
+                    $current = file_get_contents($htaccess_file);
+                    $current = preg_replace(
+                        '/# ---- Start Edit by Custom Helperbox ----.*# ---- End Edit by Custom Helperbox ----\s*/s',
+                        '',
+                        $current
+                    );
+
+                    if (trim($current) === '') {
+                        // Delete file if empty
+                        unlink($htaccess_file);
+                    } else {
+                        // Otherwise, save without your block
+                        file_put_contents($htaccess_file, $current);
+                    }
+                }
+            }
+        }
     }
 
     // Sanitize the selected post types

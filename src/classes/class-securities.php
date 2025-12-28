@@ -184,11 +184,9 @@ class Securities {
 
             // Disable support for comments and trackbacks in post types
             foreach (get_post_types() as $post_type) {
-                if ($post_type != 'update') {
-                    if (post_type_supports($post_type, 'comments')) {
-                        remove_post_type_support($post_type, 'comments');
-                        remove_post_type_support($post_type, 'trackbacks');
-                    }
+                if (post_type_supports($post_type, 'comments')) {
+                    remove_post_type_support($post_type, 'comments');
+                    remove_post_type_support($post_type, 'trackbacks');
                 }
             }
 
@@ -217,6 +215,11 @@ class Securities {
             }
             return $fields;
         }, 150);
+
+        // remove comments admin menu bar
+        add_action('admin_bar_menu', function ($admin_bar) {
+            $admin_bar->remove_menu('comments');
+        }, 99);
     }
 
     /**
@@ -247,9 +250,12 @@ class Securities {
      */
     function modify_top_admin_bar_menu($wp_admin_bar) {
         $wp_admin_bar->remove_menu('customize');
-        $wp_admin_bar->remove_node('updates');
-        $wp_admin_bar->remove_menu('comments');
         $wp_admin_bar->remove_node('new-content');
+
+        // check setting for updates helperbox_disallow_file
+        if (get_option('helperbox_disallow_file', '1') == '1') {
+            $wp_admin_bar->remove_node('updates');
+        }
     }
 
 
