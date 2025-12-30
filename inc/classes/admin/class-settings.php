@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Helperbox admin settings
  *
@@ -26,7 +27,7 @@ if (! defined('ABSPATH')) {
 class Settings {
 
     public const ADMIN_PAGE_SLUG = 'helperbox';
-
+    public const DEFAULT_LOGIN_BG = '#f1f1f1';
 
     /**
      * construction
@@ -95,6 +96,39 @@ class Settings {
             ]
         );
 
+        // login feature settings
+        register_setting(
+            $settings_option_group,
+            'helperbox_custom_adminlogin',
+            [
+                'type'              => 'boolean',
+                'sanitize_callback' => 'rest_sanitize_boolean',
+                'default'           => true,
+            ]
+        );
+
+        // Login page background color
+        register_setting(
+            $settings_option_group,
+            'helperbox_adminlogin_bgcolor',
+            [
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_hex_color', // Ensures valid hex color
+                'default'           => self::DEFAULT_LOGIN_BG,
+            ]
+        );
+
+        // Login page background images (array of attachment IDs)
+        register_setting(
+            $settings_option_group,
+            'helperbox_adminlogin_bgimages',
+            [
+                'type'              => 'array',
+                'sanitize_callback' => [$this, 'helperbox_sanitize_image_ids'],
+                'default'           => [],
+            ]
+        );
+
         // security settings 
         register_setting(
             $settings_option_group,
@@ -135,6 +169,18 @@ class Settings {
                 'default'           => true,
             ]
         );
+    }
+
+    /**
+     * Sanitize background image IDs (ensure they are integers and valid attachments)
+     */
+    public function helperbox_sanitize_image_ids($input) {
+        $input = explode(",", $input);
+        $sanitized = array_map('absint', $input); // Convert to integers
+        // Optional: verify each is a valid attachment
+        return array_filter($sanitized, function ($id) {
+            return wp_attachment_is_image($id);
+        });
     }
 
 
@@ -217,6 +263,11 @@ class Settings {
                 Breadcrumb
             </a>
 
+            <a href="?page=helperbox&tab=adminlogin"
+                class="nav-tab <?php echo ($active_tab === 'adminlogin') ? 'nav-tab-active' : ''; ?>">
+                Admin Login
+            </a>
+
             <a href="?page=helperbox&tab=security"
                 class="nav-tab <?php echo ($active_tab === 'security') ? 'nav-tab-active' : ''; ?>">
                 Security
@@ -294,6 +345,88 @@ class Settings {
                             <?php checked(get_option('helperbox_breadcrumb_feature', '1')); ?>>
                     </td>
                 </tr>
+
+            </table>
+        <?php } elseif ($active_tab === 'adminlogin') {
+            $custom_adminlogin = get_option('helperbox_custom_adminlogin', '1');
+        ?>
+            <table class="form-table" table-tab="breadcrumb">
+                <tr>
+                    <th scope="row">
+                        <label for="helperbox_custom_adminlogin">
+                            Custom Login Page
+                        </label>
+                    </th>
+                    <td>
+                        <input
+                            type="checkbox"
+                            name="helperbox_custom_adminlogin"
+                            id="helperbox_custom_adminlogin"
+                            value="1"
+                            <?php checked($custom_adminlogin); ?>>
+                        <div class="description">
+                            <p> This will give options to customize login page.</p>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+                if ($custom_adminlogin == '1'):
+                ?>
+                    <tr>
+                        <th scope="row">
+                            <label for="helperbox_adminlogin_bgcolor">
+                                Background Color
+                            </label>
+                        </th>
+                        <td>
+                            <input
+                                type="text"
+                                name="helperbox_adminlogin_bgcolor"
+                                id="helperbox_adminlogin_bgcolor"
+                                value="<?php echo esc_attr(get_option('helperbox_adminlogin_bgcolor', self::DEFAULT_LOGIN_BG)); ?>"
+                                class="helperbox-color-picker" />
+                            <p class="description">
+                                Choose the background color for the login page. Default: <?php echo self::DEFAULT_LOGIN_BG; ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="helperbox_adminlogin_bgimages">Background Images</label>
+                        </th>
+                        <td>
+                            <div class="helperbox-bg-images-upload">
+                                <div class="helperbox-bg-images-preview">
+                                    <?php
+                                    // https://rudrastyh.com/wordpress/customizable-media-uploader.html
+                                    $image_ids = get_option('helperbox_adminlogin_bgimages', []);
+                                    $image_ids = is_array($image_ids) ? $image_ids : [];
+                                    foreach ($image_ids as $image_id) {
+                                        echo wp_get_attachment_image(
+                                            $image_id,
+                                            'thumbnail',
+                                            false,
+                                            [
+                                                'style' => 'margin:5px;'
+                                            ]
+                                        );
+                                    }
+                                    ?>
+                                </div>
+                                <p>
+                                    <input type="button" class="button helperbox-add-bg-images" value="Add / Select Background Images" />
+                                    <input type="button" class="button helperbox-remove-all-bg-images" value="Remove All" style="display:<?php echo empty($image_ids) ? 'none' : 'inline-block'; ?>;" />
+                                </p>
+                                <input type="hidden" name="helperbox_adminlogin_bgimages" id="helperbox_adminlogin_bgimages" value="<?php echo esc_attr(implode(',', $image_ids)); ?>" />
+                                <p class="description">
+                                    Select one or more images to use as background on the login page. Multiple images will cycle (optional fade effect via CSS).
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                <?php
+                endif;
+                ?>
 
             </table>
         <?php } elseif ($active_tab === 'security') { ?>
