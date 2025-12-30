@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 spl_autoload_register(function ($class) {
 
     $prefix = 'Helperbox_Plugin\\';
-    $base_dir = helperbox_path . 'src/classes/';
+    $base_dir = helperbox_path . 'inc/classes/';
 
     // Only load our own classes
     if (strncmp($class, $prefix, strlen($prefix)) !== 0) {

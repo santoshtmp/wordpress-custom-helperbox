@@ -79,7 +79,7 @@ class Assets {
         if ($url) {
             echo "
             <style type='text/css'>
-                #login h1 a,
+                .helperbox-login #login h1 a,
                 .login h1 a {
                     background-image: url('" . $url[0] . "');
                 }

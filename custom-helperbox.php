@@ -38,7 +38,7 @@ if (!defined('helperbox_basename')) {
 }
 
 // autoload classes
-require_once __DIR__ . '/src/helpers/autoload.php';
+require_once __DIR__ . '/inc/helpers/autoload.php';
 
 // 
 if (class_exists(Settings::class)) {
