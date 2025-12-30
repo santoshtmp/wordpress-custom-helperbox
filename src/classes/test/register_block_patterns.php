@@ -2,6 +2,9 @@
 
 /**
  * https://developer.wordpress.org/block-editor/reference-guides/block-api/block-patterns/
+ * https://youtu.be/rca6B4xY4F4?si=g4GGQdxsBAHSK9iw
+ * https://youtu.be/xXN-Qnttr5c?si=LtkOst5JNtlH5BHG
+ * 
  */
 
 // Exit if accessed directly.

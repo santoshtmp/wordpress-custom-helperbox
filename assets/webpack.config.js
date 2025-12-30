@@ -66,6 +66,8 @@ export default (env, argv) => {
       ...cssEntries,
     },
 
+    context: path.resolve(__dirname, 'src'),
+
     output: {
       path: path.resolve(__dirname, 'build'),
       filename: '[name].js',
@@ -126,10 +128,10 @@ export default (env, argv) => {
         },
         // Images
         {
-          test: /\.(png|jpe?g|gif|svg|webp)$/i,
+          test: /\.(png|jpe?g|gif|svg|ico|webp)$/i,
           type: 'asset/resource',
           generator: {
-            filename: 'images/[name][ext]',
+            filename: '[path][name][ext]',
           },
         },
       ],
@@ -145,7 +147,7 @@ export default (env, argv) => {
     devtool: isDev ? 'source-map' : false,
 
     performance: {
-      maxAssetSize: 1048576, 
+      maxAssetSize: 1048576,
       maxEntrypointSize: 1048576,
       hints: 'warning',
     },

@@ -1,1 +1,1 @@
-jQuery(function(i){i("#login").wrap("<div class='helperbox-login'></div>")});
+jQuery(i=>{i("#login").wrap("<div class='helperbox-login'></div>")});

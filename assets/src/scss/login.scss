@@ -1,6 +1,6 @@
 .login {
   display: flex;
-  background-image: url("../images/left-map.svg"), url(../images/map.png);
+  background-image: url("../images/left-map.svg"), url("../images/map.png");
   background-color: #f2e9de;
   background-position:
     left center,
@@ -8,7 +8,6 @@
   background-repeat: no-repeat;
   align-items: stretch;
   align-content: flex-start;
-  /* background-position: 100% 100%; */
 }
 
 .helperbox-login {
@@ -16,12 +15,12 @@
   min-width: 350px;
   display: flex;
   align-items: center;
-  margin: 0px auto;
+  margin: 0 auto;
   background-color: #fff;
 }
 
-#login h1 a,
-.login h1 a {
+.login h1 a,
+#login h1 a {
   height: 100px;
   width: 160px;
   background-size: contain;
@@ -35,7 +34,7 @@
 
 .helperbox-login form {
   background-color: #fff;
-  border-width: 0px;
+  border-width: 0;
   box-shadow: none;
   margin-top: 20px;
   padding: 26px 24px 46px;
@@ -53,16 +52,6 @@
   color: #32373c;
 }
 
-.login form input[type="text"]:focus,
-.login form input[type="password"]:focus,
-.login form input[type="checkbox"]:focus,
-.login form input[type="submit"]:focus {
-  border-color: #5b9dd9;
-  -webkit-box-shadow: 0 0 2px rgba(91, 157, 217, 0.8);
-  -moz-box-shadow: 0 0 2px rgba(91, 157, 217, 0.8);
-  box-shadow: 0 0 2px rgba(91, 157, 217, 0.8);
-}
-
 .login input[type="submit"] {
   border-color: #1ca965;
   background-color: #383c44;
@@ -72,11 +61,24 @@
   border-color: #1ca965;
   background-color: #1ca965;
 }
+
 .login input[type="submit"]:active {
   border-color: #1ca965;
   background-color: #1ca965;
 }
+
 .login input[type="submit"]:focus {
   border-color: #5b9dd9;
   background-color: #1ca965;
+}
+
+
+.login form input[type="text"]:focus,
+.login form input[type="password"]:focus,
+.login form input[type="checkbox"]:focus,
+.login form input[type="submit"]:focus {
+  border-color: #5b9dd9;
+  -webkit-box-shadow: 0 0 2px rgb(91 157 217 / 80%);
+  -moz-box-shadow: 0 0 2px rgb(91 157 217 / 80%);
+  box-shadow: 0 0 2px rgb(91 157 217 / 80%);
 }

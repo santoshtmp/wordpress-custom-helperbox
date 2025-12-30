@@ -1,1 +1,1 @@
-jQuery(function(n){console.log("admin"),pluginmenu=n("#menu-plugins"),console.log(pluginmenu)});
+jQuery(o=>{window.console.log("admin");const n=o("#menu-plugins");window.console.log(n)});
