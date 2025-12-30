@@ -1,0 +1,1 @@
+jQuery(function(n){console.log("admin"),pluginmenu=n("#menu-plugins"),console.log(pluginmenu)});

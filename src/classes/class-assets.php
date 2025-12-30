@@ -44,23 +44,22 @@ class Assets {
      * 
      */
     public function admin_scripts() {
-        $admin_style = helperbox_url . '/assets/build/admin/admin.css';
-        $admin_script = helperbox_url . '/assets/build/admin/admin.js';
-        if (file_exists($admin_style)) {
+        if (file_exists(helperbox_path . 'assets/build/css/admin.css')) {
             wp_enqueue_style(
                 'helperbox-admin-style',
-                $admin_style,
+                helperbox_url . 'assets/build/css/admin.css',
                 [],
                 null,
                 'screen'
             );
         }
-        if (file_exists($admin_style)) {
+        
+        if (file_exists(helperbox_path . 'assets/build/js/admin.js')) {
             wp_enqueue_script(
                 'helperbox-admin-script',
-                $admin_script,
-                array('jquery'),
-                filemtime($admin_script),
+                helperbox_url . 'assets/build/js/admin.js',
+                ['jquery'],
+                filemtime(helperbox_path . 'assets/build/js/admin.js'),
                 array(
                     'strategy' => 'defer',
                     'in_footer' => true,
@@ -87,17 +86,20 @@ class Assets {
             </style>
             ";
         }
-        $login_style = helperbox_url . '/assets/build/login/login.css';
-        $login_script = helperbox_url . '/assets/build/login/login.js';
-        if (file_exists($login_style)) {
-            wp_enqueue_style('helperbox-login', $login_style);
+
+        if (file_exists(helperbox_path . '/assets/build/css/login.css')) {
+            wp_enqueue_style(
+                'helperbox-login',
+                helperbox_url . '/assets/build/css/login.css'
+            );
         }
-        if (file_exists($login_script)) {
+
+        if (file_exists(helperbox_path . '/assets/build/js/login.js')) {
             wp_enqueue_script(
                 'helperbox-login',
-                $login_script,
-                array('jquery'),
-                filemtime($login_script),
+                helperbox_url . '/assets/build/js/login.js',
+                ['jquery'],
+                filemtime(helperbox_path . '/assets/build/js/login.js'),
                 array(
                     'strategy' => 'defer',
                     'in_footer' => true,
