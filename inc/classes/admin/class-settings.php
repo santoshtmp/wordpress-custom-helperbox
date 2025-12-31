@@ -175,7 +175,12 @@ class Settings {
      * Sanitize background image IDs (ensure they are integers and valid attachments)
      */
     public function helperbox_sanitize_image_ids($input) {
-        $input = explode(",", $input);
+        if (!$input || $input == NULL) {
+            return;
+        }
+        if (is_string($input)) {
+            $input = explode(",", $input);
+        }
         $sanitized = array_map('absint', $input); // Convert to integers
         // Optional: verify each is a valid attachment
         return array_filter($sanitized, function ($id) {
@@ -350,8 +355,8 @@ class Settings {
         <?php } elseif ($active_tab === 'adminlogin') {
             $custom_adminlogin = get_option('helperbox_custom_adminlogin', '1');
         ?>
-            <table class="form-table" table-tab="breadcrumb">
-                <tr>
+            <table class="form-table form-table-adminlogin" table-tab="adminlogin">
+                <tr class="tr-helperbox_custom_adminlogin">
                     <th scope="row">
                         <label for="helperbox_custom_adminlogin">
                             Custom Login Page
@@ -372,7 +377,7 @@ class Settings {
                 <?php
                 if ($custom_adminlogin == '1'):
                 ?>
-                    <tr>
+                    <tr class="tr-helperbox_adminlogin_bgcolor">
                         <th scope="row">
                             <label for="helperbox_adminlogin_bgcolor">
                                 Background Color
@@ -390,18 +395,19 @@ class Settings {
                             </p>
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="tr-helperbox_adminlogin_bgimages">
                         <th scope="row">
                             <label for="helperbox_adminlogin_bgimages">Background Images</label>
                         </th>
                         <td>
                             <div class="helperbox-bg-images-upload">
-                                <div class="helperbox-bg-images-preview">
+
+                                <div class="helperbox_adminlogin_bgimages-preview">
                                     <?php
-                                    // https://rudrastyh.com/wordpress/customizable-media-uploader.html
                                     $image_ids = get_option('helperbox_adminlogin_bgimages', []);
                                     $image_ids = is_array($image_ids) ? $image_ids : [];
                                     foreach ($image_ids as $image_id) {
+                                        echo "<div class='selected-image selected-image-" . $image_id . "' >";
                                         echo wp_get_attachment_image(
                                             $image_id,
                                             'thumbnail',
@@ -410,16 +416,18 @@ class Settings {
                                                 'style' => 'margin:5px;'
                                             ]
                                         );
+                                        echo '<input type="hidden" name="helperbox_adminlogin_bgimages[]" value="' . esc_attr($image_id) . '" />';
+                                        echo '<a href="#" class="remove-image button button-secondary button-small" data-attachment-id="' . esc_attr($image_id) . '" title="Remove image">×</a>';
+                                        echo "</div>";
                                     }
                                     ?>
                                 </div>
                                 <p>
-                                    <input type="button" class="button helperbox-add-bg-images" value="Add / Select Background Images" />
-                                    <input type="button" class="button helperbox-remove-all-bg-images" value="Remove All" style="display:<?php echo empty($image_ids) ? 'none' : 'inline-block'; ?>;" />
+                                    <button type="button" class="button button-secondary" id="helperbox_adminlogin_bgimages_addBtn">Upload / Select Image</button>
+                                    <button type="button" class="button button-link-delete" id="helperbox_adminlogin_bgimages_removeAll" style="display: none;">Remove All</button>
                                 </p>
-                                <input type="hidden" name="helperbox_adminlogin_bgimages" id="helperbox_adminlogin_bgimages" value="<?php echo esc_attr(implode(',', $image_ids)); ?>" />
                                 <p class="description">
-                                    Select one or more images to use as background on the login page. Multiple images will cycle (optional fade effect via CSS).
+                                    Select images to use as background on the login page.
                                 </p>
                             </div>
                         </td>
@@ -522,8 +530,10 @@ class Settings {
                     </td>
                 </tr>
             </table>
-        <?php
+            <?php
             //
+            ?>
+        <?php
         }
     }
 

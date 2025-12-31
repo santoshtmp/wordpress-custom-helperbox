@@ -1,83 +1,79 @@
-body.login {
+.helperbox-login-style {
   display: flex;
-  background-image: url("../images/left-map.svg"), url("../images/map.png");
-  background-position:
-    left center,
-    right center;
+  background-position:center, center;
   background-repeat: no-repeat;
   align-items: stretch;
   align-content: flex-start;
-}
 
-.helperbox-login {
-  width: 40%;
-  min-width: 350px;
-  display: flex;
-  align-items: center;
-  margin: 0 auto;
-  background-color: #fff;
-
-  #backtoblog {
-    display: none;
-  }
-
-  form {
+  .helperbox-login {
+    width: 40%;
+    min-width: 350px;
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
     background-color: #fff;
-    border-width: 0;
-    box-shadow: none;
-    margin-top: 20px;
-    padding: 26px 24px 46px;
+
+    #backtoblog {
+      display: none;
+    }
+
+    form {
+      background-color: #fff;
+      border-width: 0;
+      box-shadow: none;
+      margin-top: 20px;
+      padding: 26px 24px 46px;
+    }
+
+    form label {
+      color: #777;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="checkbox"] {
+      background-color: #fbfbfb;
+      border-color: #ddd;
+      color: #32373c;
+    }
+
+    #login h1 a {
+      height: 100px;
+      width: 160px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      margin-bottom: 25px;
+    }
+
+    input[type="submit"] {
+      border-color: #1ca965;
+      background-color: #383c44;
+    }
+
+    input[type="submit"]:hover {
+      border-color: #1ca965;
+      background-color: #1ca965;
+    }
+
+    input[type="submit"]:active {
+      border-color: #1ca965;
+      background-color: #1ca965;
+    }
+
+    input[type="submit"]:focus {
+      border-color: #5b9dd9;
+      background-color: #1ca965;
+    }
+
+    form input[type="text"]:focus,
+    form input[type="password"]:focus,
+    form input[type="checkbox"]:focus,
+    form input[type="submit"]:focus {
+      border-color: #5b9dd9;
+      -webkit-box-shadow: 0 0 2px rgb(91 157 217 / 80%);
+      -moz-box-shadow: 0 0 2px rgb(91 157 217 / 80%);
+      box-shadow: 0 0 2px rgb(91 157 217 / 80%);
+    }
+
   }
-
-  form label {
-    color: #777;
-  }
-
-  input[type="text"],
-  input[type="password"],
-  input[type="checkbox"] {
-    background-color: #fbfbfb;
-    border-color: #ddd;
-    color: #32373c;
-  }
-
-  #login h1 a {
-    height: 100px;
-    width: 160px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    margin-bottom: 25px;
-  }
-
-  input[type="submit"] {
-    border-color: #1ca965;
-    background-color: #383c44;
-  }
-
-  input[type="submit"]:hover {
-    border-color: #1ca965;
-    background-color: #1ca965;
-  }
-
-  input[type="submit"]:active {
-    border-color: #1ca965;
-    background-color: #1ca965;
-  }
-
-  input[type="submit"]:focus {
-    border-color: #5b9dd9;
-    background-color: #1ca965;
-  }
-
-
-  form input[type="text"]:focus,
-  form input[type="password"]:focus,
-  form input[type="checkbox"]:focus,
-  form input[type="submit"]:focus {
-    border-color: #5b9dd9;
-    -webkit-box-shadow: 0 0 2px rgb(91 157 217 / 80%);
-    -moz-box-shadow: 0 0 2px rgb(91 157 217 / 80%);
-    box-shadow: 0 0 2px rgb(91 157 217 / 80%);
-  }
-
 }

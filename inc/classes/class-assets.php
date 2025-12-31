@@ -61,7 +61,7 @@ class Assets {
             wp_enqueue_script(
                 'helperbox-admin-script',
                 helperbox_url . 'assets/build/js/admin.js',
-                ['jquery', 'wp-color-picker', 'media-views'], // Dependencies
+                ['jquery', 'wp-color-picker', 'media-views'],
                 filemtime(helperbox_path . 'assets/build/js/admin.js'),
                 array(
                     'strategy' => 'defer',
@@ -76,7 +76,8 @@ class Assets {
             wp_enqueue_script('wp-color-picker');
 
             // Enqueue media uploader
-            // wp_enqueue_media();
+            // https://developer.wordpress.org/reference/functions/wp_enqueue_media/
+            wp_enqueue_media();
 
             // Initialize the color picker
             wp_add_inline_script(
@@ -87,12 +88,11 @@ class Assets {
                     });
                 '
             );
+            // localize script 
+            wp_localize_script('helperbox-admin-script', 'helperboxJS', [
+                'settings_page_helperbox' => true,
+            ]);
         }
-
-        // localize script 
-        wp_localize_script('helperbox-admin-script', 'helperboxAjax', [
-            'hook' => $hook,
-        ]);
     }
 
     /**
@@ -103,26 +103,32 @@ class Assets {
     function login_scripts() {
         $loginstyle = "";
 
+        // logo
         $custom_logo_id = get_theme_mod('custom_logo');
         $url = $custom_logo_id ? wp_get_attachment_image_src($custom_logo_id, 'full') : '';
         if ($url) {
-            $loginstyle .= "
-                .helperbox-login #login h1 a,
-                .login h1 a {
-                    background-image: url('" . $url[0] . "');
-                }
-            ";
+            $loginstyle .= ".helperbox-login #login h1 a, .login h1 a { background-image: url('" . $url[0] . "'); } ";
+            $loginstyle .= "\n";
         }
 
+        // BG color
         $bgcolor = get_option('helperbox_adminlogin_bgcolor', Settings::DEFAULT_LOGIN_BG);
-        $loginstyle .= "
-            body.login{
-                  background-color: " . esc_attr($bgcolor) . " !important;
+        $loginstyle .= ".helperbox-login-style{ background-color: " . esc_attr($bgcolor) . " !important; } ";
+
+        // BG images
+        $image_ids = get_option('helperbox_adminlogin_bgimages', []);
+        $image_ids = is_array($image_ids) ? $image_ids : [];
+        if ($image_ids) {
+            $styleImageURL = [];
+            foreach ($image_ids as $image_id) {
+                $imageURL = wp_get_attachment_image_url($image_id, 'large');
+                $styleImageURL[] = 'url("' . $imageURL . '")';
             }
-        ";
+            $loginstyle .= "\n";
+            $loginstyle .= ".helperbox-login-style{ background-image: " . implode(", ", $styleImageURL) . " !important; background-size: cover;  }";
+        }
 
-        echo "<style type='text/css'>" . $loginstyle . "</style>";
-
+        // Add style css
         if (file_exists(helperbox_path . '/assets/build/css/login.css')) {
             wp_enqueue_style(
                 'helperbox-login',
@@ -130,6 +136,7 @@ class Assets {
             );
         }
 
+        // Add script js
         if (file_exists(helperbox_path . '/assets/build/js/login.js')) {
             wp_enqueue_script(
                 'helperbox-login',
@@ -142,6 +149,15 @@ class Assets {
                 )
             );
         }
+
+        // Add setting login style
+        wp_add_inline_style('helperbox-login', $loginstyle);
+
+        // Add body class
+        add_filter('login_body_class', function ($classes) {
+            $classes[] = 'helperbox-login-style';
+            return $classes;
+        });
     }
 
     /**

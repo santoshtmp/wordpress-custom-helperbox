@@ -1,5 +1,31 @@
-// #menu-plugins .wp-menu-name {
-//     .update-plugins {
-//         display: none;
-//     }
-// }
+// admin css
+#helperbox_general_settings {
+    .form-table-adminlogin {
+        .helperbox_adminlogin_bgimages-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+
+            .selected-image {
+                display: inline-block;
+                position: relative;
+                margin: 5px;
+
+                img {
+                    height: 150px;
+                    width: 150px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                }
+
+                .remove-image {
+                    position: absolute;
+                    top: 5px;
+                    right: 5px;
+                    text-decoration: none;
+                }
+            }
+            
+        }
+    }
+}
