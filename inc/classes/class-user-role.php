@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Helperbox User Role
  *
@@ -24,9 +25,9 @@ class User_Role {
     public static $client_role = 'client_role';
 
     /**
-     * @var string $client_role_display_name
+     * @var string helperbox_role_display_name
      */
-    public static $client_role_display_name = 'SEAP Editor';
+    public static $helperbox_role_display_name = 'Helperbox Editor';
 
     /**
      * construction
@@ -37,14 +38,20 @@ class User_Role {
         add_action('admin_head', [$this, 'admin_head_action'], 11);
         add_action('admin_menu', [$this, 'admin_menu_action'], 999999);
         add_filter('acf/settings/show_admin', [$this, 'acf_show_admin_filter'], 10, 1);
+
+        // 
+        $roleName = get_option('helperbox_user_role_name', '');
+        if ($roleName) {
+            self::$helperbox_role_display_name = $roleName;
+        }
     }
     /**
      * Get client role display name
      * 
      * @return string
      */
-    public static function get_client_role_display_name() {
-        return self::$client_role_display_name;
+    public static function get_helperbox_role_display_name() {
+        return self::$helperbox_role_display_name;
     }
 
     /**
@@ -52,7 +59,7 @@ class User_Role {
      */
     public static function add_client_role() {
         $role = self::$client_role;
-        $role_display_name = self::$client_role_display_name;
+        $role_display_name = self::get_helperbox_role_display_name();
         add_role(
             $role,
             $role_display_name,

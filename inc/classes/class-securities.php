@@ -283,6 +283,12 @@ class Securities {
      * @return void
      */
     function disable_wp_emojicons() {
+
+        // check setting
+        if (get_option('helperbox_disable_emojicons', '1') != '1') {
+            return;
+        }
+
         // Remove emoji script from header
         remove_action('wp_head', 'print_emoji_detection_script', 7);
         remove_action('admin_print_scripts', 'print_emoji_detection_script');

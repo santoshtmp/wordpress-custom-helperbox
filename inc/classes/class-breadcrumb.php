@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Helperbox Breadcrumb
  *
@@ -20,9 +21,11 @@ if (!defined('ABSPATH')) {
 class Breadcrumb {
 
     /**
-     * @var array $exclude_post_type this post type is not included in breadcrumb
+     * this post type is not included in breadcrumb
      */
-    public static $exclude_post_type = ['page'];
+    public static function exclude_post_type() {
+        return $exclude_post_type = ['page'];
+    }
 
     /**
      * @var array $exclude_post_slug this post item is not included in breadcrumb
@@ -50,7 +53,7 @@ class Breadcrumb {
         ];
         if (is_singular()) {
             $post_type = get_post_type();
-            if (!in_array($post_type, self::$exclude_post_type)) {
+            if (!in_array($post_type, self::exclude_post_type())) {
                 $this_post_type_breadcrumb = [
                     'title' => get_post_type_object($post_type)->label,
                     'url' => (get_post_type_archive_link($post_type)) ?: '#',
