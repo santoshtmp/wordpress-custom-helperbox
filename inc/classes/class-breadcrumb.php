@@ -24,7 +24,8 @@ class Breadcrumb {
      * this post type is not included in breadcrumb
      */
     public static function exclude_post_type() {
-        return $exclude_post_type = ['page'];
+        $option = get_option('helperbox_breadcrumb_exclude_post_type', []);
+        return is_array($option) ? $option : [];
     }
 
     /**

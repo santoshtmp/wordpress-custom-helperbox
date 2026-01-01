@@ -140,6 +140,12 @@ class Assets {
             $loginstyle .= ".helperbox-login-style{ background-image: " . implode(", ", $styleImageURL) . " !important; background-size: cover;  }";
         }
 
+        // FORM BG Color
+        $formbgcolor = get_option('helperbox_adminlogin_formbgcolor', Settings::DEFAULT_FORMLOGIN_BG);
+        $formbgcolor = empty($formbgcolor) ? Settings::DEFAULT_FORMLOGIN_BG : $formbgcolor;
+        $loginstyle .= ".helperbox-login-style .helperbox-login{ background-color: " . esc_attr($formbgcolor) . " !important; } ";
+        $loginstyle .= ".helperbox-login-style form{ background-color: " . esc_attr($formbgcolor) . " !important; } ";
+
         // Add style css
         if (file_exists(helperbox_path . '/assets/build/css/login.css')) {
             wp_enqueue_style(

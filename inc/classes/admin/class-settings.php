@@ -28,6 +28,7 @@ class Settings {
 
     public const ADMIN_PAGE_SLUG = 'helperbox';
     public const DEFAULT_LOGIN_BG = '#f1f1f1';
+    public const DEFAULT_FORMLOGIN_BG = '#fff';
 
     /**
      * construction
@@ -97,7 +98,7 @@ class Settings {
         );
 
         register_setting(
-            $helperbox_general_settings_group,
+            $helperbox_breadcrumb_settings_group,
             'helperbox_breadcrumb_exclude_post_type',
             [
                 'type' => 'array',
@@ -121,6 +122,16 @@ class Settings {
         register_setting(
             $helperbox_adminlogin_settings_group,
             'helperbox_adminlogin_bgcolor',
+            [
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_hex_color', // Ensures valid hex color
+                'default'           => self::DEFAULT_LOGIN_BG,
+            ]
+        );
+       
+        register_setting(
+            $helperbox_adminlogin_settings_group,
+            'helperbox_adminlogin_formbgcolor',
             [
                 'type'              => 'string',
                 'sanitize_callback' => 'sanitize_hex_color', // Ensures valid hex color

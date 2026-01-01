@@ -6,6 +6,9 @@ jQuery(($) => {
         var bgImageFrame;
         var logoImageFrame;
 
+        // 
+        $("#helperbox_adminlogin_formbgcolor").wpColorPicker();
+
         // Action when add btn is clicked
         $('#helperbox_adminlogin_bgimages_addBtn').on('click', function (e) {
             e.preventDefault();

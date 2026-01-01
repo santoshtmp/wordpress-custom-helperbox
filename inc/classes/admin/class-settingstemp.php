@@ -167,32 +167,35 @@ class SettingsTemp {
                 <tr>
                     <th scope="row">
                         <label for="helperbox_breadcrumb_exclude_post_type">
-                            Exclude post type.
+                            Exclude post type
                         </label>
                     </th>
                     <td>
                         <?php
-                        $option = (get_option('helperbox_breadcrumb_exclude_post_type')) ?: [];
-                        $post_types = get_post_types(['public'   => true], 'objects');
-                        // unset($post_types['attachment']);
-                        foreach ($post_types  as $key => $value) {
-                            $checked = '';
-                            if (in_array($value->name, $option)) {
-                                $checked = 'Checked';
-                            }
+                        $option = get_option('helperbox_breadcrumb_exclude_post_type', []);
+                        $option = is_array($option) ? $option : [];
+
+                        $post_types = get_post_types(['public' => true], 'objects');
+                        unset($post_types['attachment']);
+                        foreach ($post_types as $post_type) :
                         ?>
-                            <label for="post-type-<?php echo esc_attr($key); ?>">
-                                <input type="checkbox" name="helperbox_breadcrumb_exclude_post_type[]" id="post-type-<?php echo esc_attr($key); ?>" value="<?php echo esc_attr($value->name); ?>" <?php echo esc_attr($checked); ?> <?php checked(in_array($value->name, $option)); ?>>
-                                <?php echo esc_attr($value->label); ?>
+                            <label for="post-type-<?php echo esc_attr($post_type->name); ?>">
+                                <input
+                                    type="checkbox"
+                                    name="helperbox_breadcrumb_exclude_post_type[]"
+                                    id="post-type-<?php echo esc_attr($post_type->name); ?>"
+                                    value="<?php echo esc_attr($post_type->name); ?>"
+                                    <?php checked(in_array($post_type->name, $option, true)); ?>>
+                                <?php echo esc_html($post_type->label); ?>
                             </label>
-                        <?php
-                        }
-                        ?>
-                        <div class="description">
-                            <p>This will exclude breadcrumb in the selected post type. </p>
-                        </div>
+                        <?php endforeach; ?>
+
+                        <p class="description">
+                            This will exclude breadcrumbs for the selected post types.
+                        </p>
                     </td>
                 </tr>
+
             <?php
             endif;
             ?>
@@ -319,6 +322,24 @@ class SettingsTemp {
                                 Select images to use as login page logo. If empty logo defined in logo from theme will be used.
                             </p>
                         </div>
+                    </td>
+                </tr>
+                <tr class="tr-helperbox_adminlogin_formbgcolor">
+                    <th scope="row">
+                        <label for="helperbox_adminlogin_formbgcolor">
+                            Form Background Color
+                        </label>
+                    </th>
+                    <td>
+                        <input
+                            type="text"
+                            name="helperbox_adminlogin_formbgcolor"
+                            id="helperbox_adminlogin_formbgcolor"
+                            value="<?php echo esc_attr(get_option('helperbox_adminlogin_formbgcolor', Settings::DEFAULT_FORMLOGIN_BG)); ?>"
+                            class="helperbox-color-picker" />
+                        <p class="description">
+                            Choose the background color for the login Form. Default: <?php echo Settings::DEFAULT_FORMLOGIN_BG; ?>
+                        </p>
                     </td>
                 </tr>
             <?php
