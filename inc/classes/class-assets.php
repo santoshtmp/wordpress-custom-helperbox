@@ -26,7 +26,6 @@ class Assets {
         add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts'], 11);
         add_action('admin_enqueue_scripts', [$this, 'admin_scripts'], 20);
         add_action('login_enqueue_scripts', [$this, 'login_scripts'], 10);
-        add_filter('login_headerurl', [$this, 'logo_url'], 10);
     }
 
     /**
@@ -101,11 +100,23 @@ class Assets {
      * @return void
      */
     function login_scripts() {
+
+        // check setting
+        if (get_option('helperbox_custom_adminlogin', '1') != '1') {
+            return;
+        }
+
         $loginstyle = "";
 
         // logo
-        $custom_logo_id = get_theme_mod('custom_logo');
-        $url = $custom_logo_id ? wp_get_attachment_image_src($custom_logo_id, 'full') : '';
+        $image_ids = get_option('helperbox_adminlogin_logo', []);
+        $image_ids = is_array($image_ids) ? $image_ids : [];
+        if ($image_ids && isset($image_ids[0]) && $custom_logo_id = $image_ids[0]) {
+            $url = $custom_logo_id ? wp_get_attachment_image_src($custom_logo_id, 'full') : '';
+        } else {
+            $custom_logo_id = get_theme_mod('custom_logo');
+            $url = $custom_logo_id ? wp_get_attachment_image_src($custom_logo_id, 'full') : '';
+        }
         if ($url) {
             $loginstyle .= ".helperbox-login #login h1 a, .login h1 a { background-image: url('" . $url[0] . "'); } ";
             $loginstyle .= "\n";
@@ -113,6 +124,7 @@ class Assets {
 
         // BG color
         $bgcolor = get_option('helperbox_adminlogin_bgcolor', Settings::DEFAULT_LOGIN_BG);
+        $bgcolor =   empty($bgcolor) ? Settings::DEFAULT_LOGIN_BG : $bgcolor;
         $loginstyle .= ".helperbox-login-style{ background-color: " . esc_attr($bgcolor) . " !important; } ";
 
         // BG images
@@ -155,17 +167,21 @@ class Assets {
 
         // Add body class
         add_filter('login_body_class', function ($classes) {
-            $classes[] = 'helperbox-login-style';
+            $bodyClass = 'helperbox-login-style';
+            $classes[] = $bodyClass;
             return $classes;
         });
-    }
 
-    /**
-     * Logo URL
-     * 
-     * @return string Home URL
-     */
-    function logo_url() {
-        return home_url();
+        // localize script 
+        $bodyClass = 'helperbox-login-style';
+        wp_localize_script('helperbox-login', 'helperboxJS', [
+            'bodyClass' => $bodyClass,
+            'login_headerurl' => home_url(),
+        ]);
+
+        // Logo URL
+        add_filter('login_headerurl', function () {
+            return home_url();
+        }, 10);
     }
 }

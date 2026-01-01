@@ -1,1 +1,1 @@
-jQuery(i=>{i("#login").wrap("<div class='helperbox-login'></div>")});
+jQuery(e=>{if(e("#login").wrap("<div class='helperbox-login'></div>"),"undefined"!=typeof helperboxJS){e("body").hasClass(helperboxJS.bodyClass)||e("body").addClass(helperboxJS.bodyClass);const l=e(".helperbox-login #login h1 a");l.attr("href")!=helperboxJS.login_headerurl&&l.attr("href",helperboxJS.login_headerurl)}});

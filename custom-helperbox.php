@@ -50,3 +50,33 @@ if (class_exists(Securities::class)) {
 if (class_exists(Assets::class)) {
     new Assets();
 }
+
+
+
+
+add_action('admin_notices', function () {
+    $screen = get_current_screen();
+
+    if (!$screen || $screen->id !== 'plugins') {
+        return;
+    }
+
+    // check setting
+    if (get_option('helperbox_disallow_file', '1') != '1') {
+        return;
+    }
+
+    $updatestatus = Settings::helperbox_render_update_status_list(true);
+
+?>
+    <div class="notice notice-success ">
+        <p>
+            <strong>HelperBox:</strong>
+            check available update versions status :
+            <a href="/wp-admin/options-general.php?page=helperbox&tab=security&check_update_status=true" target="_blank">
+                <?php echo $updatestatus['plugin_count']; ?> Plugin Update Status
+            </a>
+        </p>
+    </div>
+<?php
+});

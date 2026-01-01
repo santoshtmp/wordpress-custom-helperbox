@@ -129,6 +129,16 @@ class Settings {
             ]
         );
 
+        register_setting(
+            $settings_option_group,
+            'helperbox_adminlogin_logo',
+            [
+                'type'              => 'array',
+                'sanitize_callback' => [$this, 'helperbox_sanitize_image_ids'],
+                'default'           => [],
+            ]
+        );
+
         // security settings 
         register_setting(
             $settings_option_group,
@@ -223,7 +233,7 @@ class Settings {
             <h1 class="wp-heading-inline">Custom Helper Box</h1>
             <?php
             if ($active_tab == 'security' && $check_update_status == 'true'):
-                $this->helperbox_render_update_status_list();
+                $this::helperbox_render_update_status_list();
             else: ?>
                 <form method="post" action="options.php">
                     <?php
@@ -402,7 +412,7 @@ class Settings {
                         <td>
                             <div class="helperbox-bg-images-upload">
 
-                                <div class="helperbox_adminlogin_bgimages-preview">
+                                <div class="helperbox-media-preview helperbox_adminlogin_bgimages-preview">
                                     <?php
                                     $image_ids = get_option('helperbox_adminlogin_bgimages', []);
                                     $image_ids = is_array($image_ids) ? $image_ids : [];
@@ -423,11 +433,48 @@ class Settings {
                                     ?>
                                 </div>
                                 <p>
-                                    <button type="button" class="button button-secondary" id="helperbox_adminlogin_bgimages_addBtn">Upload / Select Image</button>
-                                    <button type="button" class="button button-link-delete" id="helperbox_adminlogin_bgimages_removeAll" style="display: none;">Remove All</button>
+                                    <button type="button" class="button button-secondary" id="helperbox_adminlogin_bgimages_addBtn" field-name="helperbox_adminlogin_bgimages">Upload / Select Image</button>
+                                    <button type="button" class="button button-link-delete helperbox-delete-all-media" field-name="helperbox_adminlogin_bgimages" style="display: none;">Remove All</button>
                                 </p>
                                 <p class="description">
                                     Select images to use as background on the login page.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="tr-helperbox_adminlogin_logo">
+                        <th scope="row">
+                            <label for="helperbox_adminlogin_logo">Login Form Logo</label>
+                        </th>
+                        <td>
+                            <div class="helperbox-bg-images-upload">
+
+                                <div class="helperbox-media-preview helperbox_adminlogin_logo-preview">
+                                    <?php
+                                    $image_ids = get_option('helperbox_adminlogin_logo', []);
+                                    $image_ids = is_array($image_ids) ? $image_ids : [];
+                                    foreach ($image_ids as $image_id) {
+                                        echo "<div class='selected-image selected-image-" . $image_id . "' >";
+                                        echo wp_get_attachment_image(
+                                            $image_id,
+                                            'thumbnail',
+                                            false,
+                                            [
+                                                'style' => 'margin:5px;'
+                                            ]
+                                        );
+                                        echo '<input type="hidden" name="helperbox_adminlogin_logo[]" value="' . esc_attr($image_id) . '" />';
+                                        echo '<a href="#" class="remove-image button button-secondary button-small" data-attachment-id="' . esc_attr($image_id) . '" title="Remove image">×</a>';
+                                        echo "</div>";
+                                    }
+                                    ?>
+                                </div>
+                                <p>
+                                    <button type="button" class="button button-secondary" id="helperbox_adminlogin_logo_addBtn" field-name="helperbox_adminlogin_logo">Upload / Select Image</button>
+                                    <button type="button" class="button button-link-delete helperbox-delete-all-media " field-name="helperbox_adminlogin_logo" style="display: none;">Remove All</button>
+                                </p>
+                                <p class="description">
+                                    Select images to use as login page logo. If empty logo defined in logo from theme will be used.
                                 </p>
                             </div>
                         </td>
@@ -541,25 +588,38 @@ class Settings {
     /**
      * 
      */
-    function helperbox_render_update_status_list() {
+    public static function helperbox_render_update_status_list($response_count = false) {
 
         if (!current_user_can('manage_options')) {
             return;
         }
-        include_once ABSPATH . 'wp-admin/includes/update.php'; ?>
+        include_once ABSPATH . 'wp-admin/includes/update.php';
+        // core
+        wp_version_check();
+        $core_updates   = get_site_transient('update_core');
+        // plugin
+        $installed_plugins = get_plugins();
+        wp_update_plugins();
+        $plugin_updates = get_site_transient('update_plugins');
+        // theme
+        $installed_themes = wp_get_themes();
+        wp_update_themes();
+        $theme_updates  = get_site_transient('update_themes');
+        if ($response_count) {
+            return [
+                'plugin_count' => count($plugin_updates->response),
+                'theme_count' => count($theme_updates->response)
+            ];
+        }
+        ?>
 
         <div class="wrap">
 
-            <h2 class="wp-heading-inline">Update Status</h2>
+            <h2 class="wp-heading-inline">Available Update Versions Status</h2>
             <hr class="wp-header-end">
 
             <!-- WordPress Core -->
             <h3>WordPress Core</h3>
-            <?php
-            // Force refresh
-            wp_version_check();
-            $core_updates   = get_site_transient('update_core');
-            ?>
             <table class="widefat striped">
                 <tbody>
                     <tr>
@@ -583,9 +643,6 @@ class Settings {
             <!-- Plugins -->
             <h3 style="margin-top:30px;">Plugin Updates</h3>
             <?php
-            $installed_plugins = get_plugins();
-            wp_update_plugins();
-            $plugin_updates = get_site_transient('update_plugins');
             if (!empty($plugin_updates->response)) : ?>
                 <table class="widefat striped">
                     <thead>
@@ -613,9 +670,6 @@ class Settings {
             <!-- Themes -->
             <h3 style="margin-top:30px;">Theme Updates</h3>
             <?php
-            $installed_themes = wp_get_themes();
-            wp_update_themes();
-            $theme_updates  = get_site_transient('update_themes');
             if (!empty($theme_updates->response)) : ?>
                 <table class="widefat striped">
                     <thead>

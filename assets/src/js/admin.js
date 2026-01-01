@@ -3,20 +3,31 @@ jQuery(($) => {
     // For settings_page_helperbox
     if (typeof helperboxJS !== 'undefined' && helperboxJS.settings_page_helperbox) {
 
-        var frame;
-        const $preview = $('.helperbox_adminlogin_bgimages-preview');
-        const $removeAll = $('#helperbox_adminlogin_bgimages_removeAll');
+        var bgImageFrame;
+        var logoImageFrame;
 
         // Action when add btn is clicked
         $('#helperbox_adminlogin_bgimages_addBtn').on('click', function (e) {
             e.preventDefault();
-            mediaFrame(frame, 'Select Login Background Image');
+            // get preview area
+            const previewSection = $('.helperbox_adminlogin_bgimages-preview');
+            const fieldName = $(this).attr('field-name');
+            mediaFrame(fieldName, bgImageFrame, 'Select Login Background Image', previewSection, false);
+        });
+
+        // Action when add btn is clicked
+        $('#helperbox_adminlogin_logo_addBtn').on('click', function (e) {
+            e.preventDefault();
+            const previewSection = $('.helperbox_adminlogin_logo-preview');
+            const fieldName = $(this).attr('field-name');
+            mediaFrame(fieldName, logoImageFrame, 'Select Login Form Logo', previewSection, false);
         });
 
         // Remove all
-        $removeAll.on('click', function (e) {
+        $(document).on('click', '.helperbox-delete-all-media', function (e) {
             e.preventDefault();
-            $preview.empty();
+            const fieldName = $(this).attr('field-name');
+            $("." + fieldName + "-preview").empty();
             $(this).hide();
         });
 
@@ -28,7 +39,10 @@ jQuery(($) => {
         });
 
         // preview attachment
-        function previewAttachment(attachment) {
+        function previewAttachment(fieldName, attachment) {
+            if (!fieldName || !attachment) {
+                return;
+            }
             // Safely escape attributes
             var imgSrc = attachment.url.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
             var attachmentId = parseInt(attachment.id, 10);
@@ -42,7 +56,7 @@ jQuery(($) => {
                 'alt="Selected image">' +
 
                 // Hidden input to store attachment ID (for saving multiple)
-                '<input type="hidden" name="helperbox_adminlogin_bgimages[]" value="' + attachmentId + '">' +
+                '<input type="hidden" name="' + fieldName + '[]" value="' + attachmentId + '">' +
 
                 // Remove button
                 '<a href="#" class="remove-image button button-secondary button-small" ' +
@@ -51,8 +65,8 @@ jQuery(($) => {
             );
         }
 
-
-        function mediaFrame(frame, frameTitle, isMultiple = false) {
+        //
+        function mediaFrame(fieldName, frame, frameTitle, previewSection, isMultiple = false) {
             // Reuse existing frame if already created
             if (frame) {
                 frame.open();
@@ -76,11 +90,11 @@ jQuery(($) => {
                 if (isMultiple) {
                     var attachments = frame.state().get('selection').toJSON();
                     attachments.forEach((attachment) => {
-                        $preview.append(previewAttachment(attachment));
+                        previewSection.append(previewAttachment(fieldName, attachment));
                     });
                 } else {
                     var attachment = frame.state().get('selection').first().toJSON();
-                    $preview.html(previewAttachment(attachment));
+                    previewSection.html(previewAttachment(fieldName, attachment));
                 }
 
                 if (isMultiple) {
