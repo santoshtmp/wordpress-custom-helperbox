@@ -647,15 +647,20 @@ class Settings {
                 <table class="widefat striped">
                     <thead>
                         <tr>
+                            <th>S.N.</th>
                             <th>Plugin</th>
                             <th>Current Version</th>
                             <th>New Version</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($plugin_updates->response as $key => $plugin) :
+                        <?php
+                        $countplugin = 0;
+                        foreach ($plugin_updates->response as $key => $plugin) :
+                            $countplugin++;
                         ?>
                             <tr>
+                                <td><?php echo esc_html($countplugin); ?></td>
                                 <td><?php echo esc_html($installed_plugins[$key]['Name']); ?></td>
                                 <td><?php echo esc_html($installed_plugins[$key]['Version']); ?></td>
                                 <td><?php echo esc_html($plugin->new_version); ?></td>
@@ -674,14 +679,20 @@ class Settings {
                 <table class="widefat striped">
                     <thead>
                         <tr>
+                            <th>S.N.</th>
                             <th>Theme</th>
                             <th>Current Version</th>
                             <th>New Version</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($theme_updates->response as $key => $theme) : ?>
+                        <?php
+                        $counttheme = 0;
+                        foreach ($theme_updates->response as $key => $theme) :
+                            $counttheme++;
+                        ?>
                             <tr>
+                                <td><?php echo esc_html($counttheme); ?></td>
                                 <td><?php echo esc_html($installed_themes[$key]['Name']); ?></td>
                                 <td><?php echo esc_html($installed_themes[$key]['Version']); ?></td>
                                 <td><?php echo esc_html($theme['new_version']); ?></td>

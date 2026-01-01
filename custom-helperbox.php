@@ -72,10 +72,13 @@ add_action('admin_notices', function () {
     <div class="notice notice-success ">
         <p>
             <strong>HelperBox:</strong>
-            check available update versions status :
             <a href="/wp-admin/options-general.php?page=helperbox&tab=security&check_update_status=true" target="_blank">
-                <?php echo $updatestatus['plugin_count']; ?> Plugin Update Status
+                check available update versions status :
             </a>
+        <ul>
+            <li> <?php echo $updatestatus['plugin_count']; ?> Plugin update available</li>
+            <li> <?php echo $updatestatus['theme_count']; ?> Theme update available</li>
+        </ul>
         </p>
     </div>
 <?php
