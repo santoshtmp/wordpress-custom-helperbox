@@ -14,7 +14,7 @@ Version: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-To make search filter form and query easy.
+Custom Helper Box provides the extra functions and features for developer.
 
 == Description ==
 Custom Helperbox is a developer-oriented WordPress plugin that provides a set of reusable helper functions, UI enhancements, and security improvements to streamline WordPress development.
