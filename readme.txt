@@ -17,7 +17,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 To make search filter form and query easy.
 
 == Description ==
-Custom Helper Box provides the extra custom functions and features 
+Custom Helperbox is a developer-oriented WordPress plugin that provides a set of reusable helper functions, UI enhancements, and security improvements to streamline WordPress development.
 
 == Release ==
 1. Initial release 1.0.0
@@ -29,6 +29,11 @@ Custom Helper Box provides the extra custom functions and features
 == Upgrade Notice ==
 = 1.0.0 =
 Initial release.
+
+== Screenshot ===
+![General setting](./assets/screenshot/general-setting.png)
+![Admin Login setting](./assets/screenshot/admin-login-setting.png)
+![security setting](./assets/screenshot/security-setting.png)
 
 == License ==
 This plugin is licensed under the GPLv2 or later. For more information, see http://www.gnu.org/licenses/gpl-2.0.html.
