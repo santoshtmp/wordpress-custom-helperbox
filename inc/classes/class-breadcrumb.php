@@ -44,6 +44,11 @@ class Breadcrumb {
             return;
         }
 
+        //don't show the breadcrumb in front page 
+        if (is_front_page()) {
+            return '';
+        }
+
         $breadcrumbs = [
             [
                 'title' => 'Home',
@@ -141,10 +146,7 @@ class Breadcrumb {
         if (get_option('helperbox_breadcrumb_feature', '1') != '1') {
             return;
         }
-        //don't show the breadcrumb in front page 
-        if (is_front_page()) {
-            return '';
-        }
+
         // don't show the breadcrumb in post type "region" or "digital-id" with type_of_region not equal to Country
         if (get_post_type() === 'region' || get_post_type() === 'digital-id') {
             $type_of_region = get_post_meta(get_the_ID(), 'type_of_region', true);

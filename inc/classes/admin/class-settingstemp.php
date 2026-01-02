@@ -24,8 +24,7 @@ class SettingsTemp {
     /**
      * 
      */
-    public static function temp_helperbox_settings_group_nav_tab($active_tab = 'general') {
-?>
+    public static function temp_helperbox_settings_group_nav_tab($active_tab = 'general') { ?>
         <h3 class="nav-tab-wrapper">
             <a href="?page=helperbox&tab=general"
                 class="nav-tab <?php echo ($active_tab === 'general') ? 'nav-tab-active' : ''; ?>">
@@ -202,7 +201,6 @@ class SettingsTemp {
         </table>
     <?php
     }
-
 
     /**
      * 
@@ -464,6 +462,38 @@ class SettingsTemp {
                     </p>
                 </td>
             </tr>
+
+            <tr>
+                <th scope="row">
+                    <label for="helperbox_disable_emojicons">
+                        Other Setting that are applied by default:
+                    </label>
+                </th>
+                <td>
+                    <ol>
+                        <li>Hide wordpress version</li>
+                        <li>Nonce life to 30 min</li>
+                        <li>Disable xmlrpc and pingback</li>
+                        <li>
+                            Added header protection for like:
+                            <code>
+                                header('X-FRAME-OPTIONS: SAMEORIGIN');
+                                header('X-XSS-Protection: 1; mode=block');
+                                header("Content-Security-Policy: frame-ancestors 'self';");
+                                header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+                            </code>
+                        </li>
+                        <li>
+                            Modified top admin bar menu: 
+                                <ol>
+                                    <li>Customizer and New content button are removed</li>
+                                </ol>
+                        </li>
+                        <!-- <li>Remove dashboard widgets</li> -->
+                    </ol>
+                </td>
+            </tr>
+
         </table>
     <?php
     }

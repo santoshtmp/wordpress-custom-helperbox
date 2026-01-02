@@ -16,6 +16,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+/**
+ * Main Helperbox class
+ */
 class HelperBox {
 
     /**
@@ -37,7 +40,7 @@ class HelperBox {
             new User_Role();
         }
 
-        // 
+        // General hooks
         add_action('admin_notices', [$this, 'helperbox_admin_notices']);
         add_filter('theme_page_templates', [$this, 'register_page_templates']);
         add_filter('page_template_hierarchy', [$this, 'page_template_to_subdir']);
@@ -124,48 +127,68 @@ class HelperBox {
     }
 
     /**
-     * 
+     * Admin Notices
      */
     function helperbox_admin_notices() {
         $screen = get_current_screen();
 
-        if (!$screen || $screen->id !== 'plugins') {
-            return;
-        }
+        /**
+         * Information Notice in plugin page
+         */
+        if ($screen && $screen->id == 'plugins') {
+            // check setting
+            if (get_option('helperbox_disallow_file', '1') != '1') {
+                return;
+            }
+            if (!current_user_can('manage_options')) {
+                return;
+            }
 
-        // check setting
-        if (get_option('helperbox_disallow_file', '1') != '1') {
-            return;
-        }
-        if (!current_user_can('manage_options')) {
-            return;
-        }
-
-        include_once ABSPATH . 'wp-admin/includes/update.php';
-        // plugin
-        wp_update_plugins();
-        $plugin_updates = get_site_transient('update_plugins');
-        // theme
-        wp_update_themes();
-        $theme_updates  = get_site_transient('update_themes');
-        // count
-        $plugin_count = count($plugin_updates->response);
-        $theme_count = count($theme_updates->response);
+            include_once ABSPATH . 'wp-admin/includes/update.php';
+            // plugin
+            wp_update_plugins();
+            $plugin_updates = get_site_transient('update_plugins');
+            // theme
+            wp_update_themes();
+            $theme_updates  = get_site_transient('update_themes');
+            // count
+            $plugin_count = count($plugin_updates->response);
+            $theme_count = count($theme_updates->response);
 
 ?>
-        <div class="notice notice-success ">
-            <p>
-                <strong>HelperBox:</strong>
-                <a href="/wp-admin/options-general.php?page=helperbox&tab=security&check_update_status=true" target="_blank">
-                    Check available update versions status
-                </a>
-            <ul>
-                <li> <?php echo $plugin_count; ?> Plugin update available</li>
-                <li> <?php echo $theme_count; ?> Theme update available</li>
-            </ul>
-            </p>
-        </div>
+            <div class="notice notice-success ">
+                <p>
+                    <strong>HelperBox:</strong>
+                    <a href="/wp-admin/options-general.php?page=helperbox&tab=security&check_update_status=true" target="_blank">
+                        Check available update versions status
+                    </a>
+                <ul>
+                    <li> <?php echo $plugin_count; ?> Plugin update available</li>
+                    <li> <?php echo $theme_count; ?> Theme update available</li>
+                </ul>
+                </p>
+            </div>
+            <?php
+        }
+
+        /**
+         * Information notice in helperbox update status check page 
+         */
+        if ($screen && $screen->id == 'settings_page_helperbox') {
+            $check_update_status = $_GET['check_update_status'] ?? 'false';
+            $active_tab = $_GET['tab'] ?? 'general';
+            if ($active_tab == 'security' && $check_update_status == 'true'):
+            ?>
+                <div class="notice notice-success ">
+                    <p>Updates are shown for reference only. File modifications are disabled.</p>
+                    <p>To apply updates, uncheck "Disallow file modifications through admin interface" option from Helperbox security settings</p>
+                    <p>
+                        <a class="wp-core-ui button" href="/wp-admin/options-general.php?page=helperbox&tab=security">Check Helper Box Security Settings</a>
+                    </p>
+                </div>
 <?php
+            endif;
+        }
     }
 
 

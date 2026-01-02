@@ -67,7 +67,7 @@ class Settings {
         // General settings
         register_setting(
             $helperbox_general_settings_group,
-            'helperbox_user_role_name',
+            'helperbox_custom_theme_templates_dir',
             [
                 'type' => 'text',
                 'sanitize_callback' => 'sanitize_text_field',
@@ -293,14 +293,12 @@ class Settings {
 <?php
     }
 
-
-
     /**
      * 
      */
     function render_helperbox_general_settings_box() {
         $active_tab = $_GET['tab'] ?? 'general';
-        SettingsTemp::temp_helperbox_settings_group_nav_tab();
+        SettingsTemp::temp_helperbox_settings_group_nav_tab($active_tab);
         if ($active_tab === 'general') :
             SettingsTemp::temp_helperbox_general_settings_group();
         elseif ($active_tab === 'breadcrumb'):
