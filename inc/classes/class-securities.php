@@ -350,13 +350,13 @@ class Securities {
     function remove_dashboard_widgets() {
         global $wp_meta_boxes;
 
-        unset($wp_meta_boxes['dashboard']['normal']['core']['happy_addons_news_update']);
-        unset($wp_meta_boxes['dashboard']['normal']['core']['e-dashboard-overview']);
-        unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_activity']);
+        // unset($wp_meta_boxes['dashboard']['normal']['core']['happy_addons_news_update']);
+        // unset($wp_meta_boxes['dashboard']['normal']['core']['e-dashboard-overview']);
+        // unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_activity']);
 
-        unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_recent_comments']);
-        unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_primary']);
-        unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_quick_press']);
+        // unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_recent_comments']);
+        // unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_primary']);
+        // unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_quick_press']);
     }
 }
 

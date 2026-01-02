@@ -22,29 +22,55 @@ class Assets {
      * construction
      */
     function __construct() {
-        add_action('init', [$this, 'register_scripts']);
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts'], 11);
-        add_action('admin_enqueue_scripts', [$this, 'admin_scripts'], 20);
-        add_action('login_enqueue_scripts', [$this, 'login_scripts'], 10);
+        add_action('init', [$this, 'helperbox_register_scripts']);
+        add_action('wp_enqueue_scripts', [$this, 'helperbox_enqueue_scripts'], 11);
+        add_action('enqueue_block_editor_assets', [$this, 'helperbox_enqueue_block_editor_assets'], 11);
+        add_action('admin_enqueue_scripts', [$this, 'helperbox_admin_scripts'], 20);
+        add_action('login_enqueue_scripts', [$this, 'helperbox_login_scripts'], 10);
+
+        // Also add script to backend gutenberg
+        // $styleURL = '';
+        // add_editor_style($styleURL);
     }
 
     /**
-     * 
+     * Register Script
      */
-    function register_scripts() {
+    function helperbox_register_scripts() {
+
+        // // dataTables https://datatables.net/
+        // wp_register_script(
+        //     'dataTables',
+        //     'https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js',
+        // );
+
+        // wp_register_style(
+        //     'dataTables',
+        //     'https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css'
+        // );
     }
 
     /**
-     * 
+     * Enqueue in frontend
      */
-    function enqueue_scripts() {
+    function helperbox_enqueue_scripts() {
     }
 
     /**
-     * Admin script
+     * Enqueue assets for editor block.
+     *
+     * Hooked to: enqueue_block_editor_assets
+     *
+     * @return void
+     */
+    public function helperbox_enqueue_block_editor_assets() {
+    }
+
+    /**
+     * Enqueue in backend admin area
      * 
      */
-    public function admin_scripts($hook) {
+    public function helperbox_admin_scripts($hook) {
 
         if (file_exists(helperbox_path . 'assets/build/css/admin.css')) {
             wp_enqueue_style(
@@ -99,7 +125,7 @@ class Assets {
      * 
      * @return void
      */
-    function login_scripts() {
+    function helperbox_login_scripts() {
 
         // check setting
         if (get_option('helperbox_custom_adminlogin', '1') != '1') {
