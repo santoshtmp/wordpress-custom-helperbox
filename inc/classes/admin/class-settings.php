@@ -128,7 +128,7 @@ class Settings {
                 'default'           => self::DEFAULT_LOGIN_BG,
             ]
         );
-       
+
         register_setting(
             $helperbox_adminlogin_settings_group,
             'helperbox_adminlogin_formbgcolor',
@@ -178,6 +178,16 @@ class Settings {
                 'type'              => 'boolean',
                 'sanitize_callback' => 'rest_sanitize_boolean',
                 'default'           => true,
+            ]
+        );
+
+        register_setting(
+            $helperbox_security_settings_group,
+            'helperbox_restapi_url_prefix',
+            [
+                'type' => 'text',
+                'sanitize_callback' => 'sanitize_text_field',
+                'default' => "api"
             ]
         );
 

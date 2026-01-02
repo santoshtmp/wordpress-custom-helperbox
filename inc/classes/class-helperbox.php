@@ -44,6 +44,41 @@ class HelperBox {
         add_action('admin_notices', [$this, 'helperbox_admin_notices']);
         add_filter('theme_page_templates', [$this, 'register_page_templates']);
         add_filter('page_template_hierarchy', [$this, 'page_template_to_subdir']);
+
+        // include api path
+        $include_dir_paths = [
+            helperbox_path . 'endpoint/rest',
+            helperbox_path . 'endpoint/ajax',
+
+        ];
+        self::requires_dir_paths_files($include_dir_paths);
+    }
+
+
+    /**
+     * requires all ".php" files from dir defined in "include_dir_paths" at first level.
+     * @param array $include_dir_paths will be [__DIR__.'/inc'];
+     */
+    public static function requires_dir_paths_files($include_dir_paths) {
+        foreach ($include_dir_paths as $key => $file_path) {
+            if (!file_exists($file_path)) {
+                continue;
+            }
+            foreach (new \DirectoryIterator($file_path) as $file) {
+                if ($file->isDot() || $file->isDir()) {
+                    continue;
+                }
+                $fileExtension = $file->getExtension(); // Get the current file extension
+                if ($fileExtension != "php") {
+                    continue;
+                }
+                // $fileName = $file->getFilename(); // Get the full name of the current file.
+                $filePath = $file->getPathname(); // Get the full path of the current file
+                if ($filePath) {
+                    require_once $filePath;
+                }
+            }
+        }
     }
 
     /**

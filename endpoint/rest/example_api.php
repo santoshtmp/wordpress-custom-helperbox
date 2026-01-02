@@ -11,14 +11,19 @@ if (!defined('ABSPATH')) {
  * https://developer.wordpress.org/rest-api/reference/comments/
  * https://developer.wordpress.org/rest-api/extending-the-rest-api/routes-and-endpoints/
  * 
- * API =  /api/data/v1/example_api?_nonce=
+ * API =  /{api_url_prefix}/helperbox/v1/example_api?_nonce=
+ * 
+ * 
+ * custom api endpoint and slug
+ * 1. https://developer.wordpress.org/apis/
+ * 2. https://developer.wordpress.org/rest-api/reference/
+ * 3. https://developer.wordpress.org/rest-api/extending-the-rest-api/routes-and-endpoints/
  * 
  */
-// 
 
 add_action('rest_api_init', function () {
     register_rest_route(
-        'data/v1',
+        'helperbox/v1',
         '/example_api',
         array(
             [
@@ -45,8 +50,7 @@ add_action('rest_api_init', function () {
 /**
  * Function to get rest api data
  */
-function get_example_api_content($request)
-{
+function get_example_api_content($request) {
     try {
         // get the parameters
         $project_id = $request['project_id'];

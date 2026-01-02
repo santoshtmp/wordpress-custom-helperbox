@@ -388,6 +388,28 @@ class SettingsTemp {
             </tr>
             <tr>
                 <th scope="row">
+                    <label for="helperbox_restapi_url_prefix">
+                        REST API URL prefix
+                    </label>
+                </th>
+                <td>
+                    <?php
+                    $value = get_option('helperbox_restapi_url_prefix', 'api');
+                    ?>
+                    <input
+                        type="text"
+                        name="helperbox_restapi_url_prefix"
+                        id="helperbox_restapi_url_prefix"
+                        value="<?php echo esc_attr($value); ?>"
+                        class="regular-text">
+                    <div class="description">
+                        <p>This will change the REST API URL prefix from default value "wp-json" to new custom value <?php echo esc_html($value); ?></p>
+                        <p>If empty default value "wp-json" will be used.</p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
                     <label for="helperbox_disallow_file">
                         Disallow file modifications through admin interface
                     </label>
@@ -475,7 +497,7 @@ class SettingsTemp {
                         <li>Nonce life to 30 min</li>
                         <li>Disable xmlrpc and pingback</li>
                         <li>
-                            Added header protection for like:
+                            Added header protection like:
                             <code>
                                 header('X-FRAME-OPTIONS: SAMEORIGIN');
                                 header('X-XSS-Protection: 1; mode=block');
@@ -484,12 +506,12 @@ class SettingsTemp {
                             </code>
                         </li>
                         <li>
-                            Modified top admin bar menu: 
-                                <ol>
-                                    <li>Customizer and New content button are removed</li>
-                                </ol>
+                            Modified top admin bar menu:
+                            <ol>
+                                <li>Customizer and New content button are removed</li>
+                            </ol>
                         </li>
-                        <!-- <li>Remove dashboard widgets</li> -->
+                        <li>Remove dashboard widgets like: Activity, Quick Draft, Wordpress Event and News, and other</li>
                     </ol>
                 </td>
             </tr>

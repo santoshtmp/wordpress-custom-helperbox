@@ -87,6 +87,21 @@ class Securities {
                 }
             }
         });
+
+        /**
+         * 
+         * custom api endpoint and slug
+         * 1. https://developer.wordpress.org/apis/
+         * 2. https://developer.wordpress.org/rest-api/reference/
+         * 3. https://developer.wordpress.org/rest-api/extending-the-rest-api/routes-and-endpoints/
+         * 
+         */
+        $restapi_url_prefix = get_option('helperbox_restapi_url_prefix', 'api');
+        if ($restapi_url_prefix) {
+            add_filter('rest_url_prefix', function () {
+                return get_option('helperbox_restapi_url_prefix', 'api');
+            });
+        }
     }
 
     /**
@@ -350,13 +365,13 @@ class Securities {
     function remove_dashboard_widgets() {
         global $wp_meta_boxes;
 
-        // unset($wp_meta_boxes['dashboard']['normal']['core']['happy_addons_news_update']);
-        // unset($wp_meta_boxes['dashboard']['normal']['core']['e-dashboard-overview']);
-        // unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_activity']);
+        unset($wp_meta_boxes['dashboard']['normal']['core']['happy_addons_news_update']);
+        unset($wp_meta_boxes['dashboard']['normal']['core']['e-dashboard-overview']);
+        unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_activity']);
 
-        // unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_recent_comments']);
-        // unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_primary']);
-        // unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_quick_press']);
+        unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_recent_comments']);
+        unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_primary']);
+        unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_quick_press']);
     }
 }
 
