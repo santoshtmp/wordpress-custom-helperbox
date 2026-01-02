@@ -9,6 +9,7 @@
 
 namespace Helperbox_Plugin\admin;
 
+use Helperbox_Plugin\Breadcrumb;
 use Helperbox_Plugin\User_Role;
 
 // Exit if accessed directly.
@@ -64,7 +65,7 @@ class SettingsTemp {
                 </th>
                 <td>
                     <?php
-                    $value = get_option('helperbox_custom_theme_templates_dir', '');
+                    $value = get_option('helperbox_custom_theme_templates_dir', Settings::CUSTOM_THEME_TEMP_DIR);
                     ?>
                     <input
                         type="text"
@@ -86,6 +87,7 @@ class SettingsTemp {
                             echo "<p>Incorrect template dir, There is no such dir:<code>" . str_replace(ABSPATH, '', $templates_dir) . "</code> </p>";
                         }
                         ?>
+                        <P>Default: <?php echo esc_html(Settings::CUSTOM_THEME_TEMP_DIR); ?> </P>
                     </div>
                 </td>
             </tr>
@@ -98,7 +100,7 @@ class SettingsTemp {
                 </th>
                 <td>
                     <?php
-                    $value = get_option('helperbox_user_role_name', User_Role::$helperbox_role_display_name);
+                    $value = get_option('helperbox_user_role_name', User_Role::CLIENT_NAME);
                     ?>
                     <input
                         type="text"
@@ -108,13 +110,13 @@ class SettingsTemp {
                         class="regular-text">
                     <div class="description">
                         <p>Change client role name.</p>
+                        <P>Default: <?php echo esc_html(User_Role::CLIENT_NAME); ?> </P>
                     </div>
                 </td>
             </tr>
             <tr>
                 <th>
                     <p>Other availables add on plugins:</p>
-
                 </th>
                 <td>
                     <ol>
@@ -143,7 +145,7 @@ class SettingsTemp {
      */
     public static function temp_helperbox_breadcrumb_settings_group() {
         settings_fields('helperbox_breadcrumb_settings_group');
-        $breadcrumb_featureminlogin = get_option('helperbox_breadcrumb_feature', '1'); ?>
+        $breadcrumb_featureminlogin = get_option('helperbox_breadcrumb_feature', Settings::DEFAULT_BREADCRUMB_FEATURE); ?>
         <table class="form-table" table-tab="breadcrumb">
             <tr>
                 <th scope="row">
@@ -158,6 +160,9 @@ class SettingsTemp {
                         id="helperbox_breadcrumb_feature"
                         value="1"
                         <?php checked($breadcrumb_featureminlogin); ?>>
+                    <div class="description">
+                        <P>Default: unchecked </P>
+                    </div>
                 </td>
             </tr>
             <?php
@@ -189,11 +194,77 @@ class SettingsTemp {
                             </label>
                         <?php endforeach; ?>
 
-                        <p class="description">
-                            This will exclude breadcrumbs for the selected post types.
-                        </p>
+                        <div class="description">
+                            <p>This will exclude breadcrumbs for the selected post types.</p>
+                        </div>
                     </td>
                 </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="helperbox_breadcrumb_exclude_post_slug">
+                            Exclude Post Items
+                        </label>
+                    </th>
+                    <td>
+                        <textarea
+                            id="helperbox_breadcrumb_exclude_post_slug"
+                            name="helperbox_breadcrumb_exclude_post_slug"
+                            rows="5"
+                            cols="50"
+                            class="regular-text"><?php echo esc_textarea(get_option('helperbox_breadcrumb_exclude_post_slug', '')); ?>
+                        </textarea>
+                        <div class="description">
+                            <p>
+                                This will exclude breadcrumbs for the selected post item slugs.
+                                Enter one post slug per line.
+                            </p>
+                            <p>
+                                Example:
+                                <?php echo "<pre>regional-overview" . "\n" . "digital-id-region</pre>" ?>
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- <tr>
+                    <th scope="row">
+                        <label for="helperbox_breadcrumb_remove_condition">
+                            Condition to remove breadcrumb
+                        </label>
+                    </th>
+                    <td>
+                        <?php
+                        $placeholder_example = '{
+    "url": [
+        "/digital-id/regional-overview"
+    ],
+    "post_type": {
+        "region": {
+            {
+                "meta_key": "type_of_region",
+                "meta_value": "country"
+            }
+        }
+    }
+}';
+                        ?>
+                        <textarea
+                            id="helperbox_breadcrumb_remove_condition"
+                            name="helperbox_breadcrumb_remove_condition"
+                            rows="10"
+                            cols="60"
+                            class="large-text code"
+                            placeholder='<?php echo $placeholder_example; ?>'><?php echo esc_textarea(get_option('helperbox_breadcrumb_remove_condition', '')); ?></textarea>
+
+                        <div class="description">
+                            <p>This will exclude/remove breadcrumbs based on the given conditions.
+                                Enter conditions in <strong>valid JSON format</strong>.</p>
+                        </div>
+
+                    </td>
+                </tr> -->
+
+
 
             <?php
             endif;
@@ -207,7 +278,7 @@ class SettingsTemp {
      */
     public static function temp_helperbox_adminlogin_settings_group() {
         settings_fields('helperbox_adminlogin_settings_group');
-        $custom_adminlogin = get_option('helperbox_custom_adminlogin', '1'); ?>
+        $custom_adminlogin = get_option('helperbox_custom_adminlogin', Settings::DEFAULT_CUSTOM_LOGINADMIN); ?>
         <table class="form-table form-table-adminlogin" table-tab="adminlogin">
             <tr class="tr-helperbox_custom_adminlogin">
                 <th scope="row">
@@ -224,6 +295,9 @@ class SettingsTemp {
                         <?php checked($custom_adminlogin); ?>>
                     <div class="description">
                         <p> This will give options to customize login page.</p>
+                        <div class="description">
+                            <P>Default: checked </P>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -367,7 +441,10 @@ class SettingsTemp {
                         id="helperbox_comment_feature"
                         value="1"
                         <?php checked(get_option('helperbox_comment_feature', '1')); ?>>
-                    <p class="description">This will remove edit-comments.php page and close comments feature completely.</p>
+                    <div class="description">
+                        <p>This will remove edit-comments.php page and close comments feature completely.</p>
+                        <P>Default: checked </P>
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -383,7 +460,11 @@ class SettingsTemp {
                         id="helperbox_disable_restapi_unauthenticated_user"
                         value="1"
                         <?php checked(get_option('helperbox_disable_restapi_unauthenticated_user', '1')); ?>>
-                    <p class="description">This will disable REST API for unauthenticated user. if "_nonce" is verified, it won't restrict.</p>
+                    <div class="description">
+                        <p>This will disable REST API for unauthenticated user. if "_nonce" is verified, it won't restrict.</p>
+                        <P>Default: checked </P>
+                    </div>
+
                 </td>
             </tr>
             <tr>
@@ -405,6 +486,7 @@ class SettingsTemp {
                     <div class="description">
                         <p>This will change the REST API URL prefix from default value "wp-json" to new custom value <?php echo esc_html($value); ?></p>
                         <p>If empty default value "wp-json" will be used.</p>
+                        <P>Default: api </P>
                     </div>
                 </td>
             </tr>
@@ -427,6 +509,7 @@ class SettingsTemp {
                             <li>You can still view available update versions on the <a href="/wp-admin/options-general.php?page=helperbox&tab=security&check_update_status=true" target="_blank"> Update Status</a> page.</li>
                             <li>To apply updates, disable this option and then check for <a href="/wp-admin/update-core.php" target="_blank"> core, plugin, or theme updates.</a></li>
                         </ul>
+                        <P>Default: checked </P>
                     </div>
                 </td>
             </tr>
@@ -455,7 +538,7 @@ class SettingsTemp {
                             name="helperbox_disable_phpexecution_upload_dir"
                             id="helperbox_disable_phpexecution_upload_dir"
                             value="1"
-                            <?php checked(get_option('helperbox_disable_phpexecution_upload_dir')); ?>>
+                            <?php checked(get_option('helperbox_disable_phpexecution_upload_dir', '1')); ?>>
                         <div class="description">
                             <p> This will disable PHP execution through uploads directory.</p>
                         </div>
@@ -479,9 +562,13 @@ class SettingsTemp {
                         id="helperbox_disable_emojicons"
                         value="1"
                         <?php checked(get_option('helperbox_disable_emojicons')); ?>>
-                    <p class="description">
-                        This will disable wp emojicons.
-                    </p>
+                    <div class="description">
+                        <p>
+                            This will disable wp emojicons.
+                        </p>
+                        <P>Default: unchecked </P>
+                    </div>
+
                 </td>
             </tr>
 

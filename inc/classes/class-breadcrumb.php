@@ -20,25 +20,41 @@ if (!defined('ABSPATH')) {
  */
 class Breadcrumb {
 
+    public static $excludePostType = [];
+    public static $excludePostSlug = [];
+
     /**
-     * this post type is not included in breadcrumb
+     * construction
      */
-    public static function exclude_post_type() {
-        $option = get_option('helperbox_breadcrumb_exclude_post_type', []);
-        return is_array($option) ? $option : [];
+    function __construct() {
+        self::get_exclude_post_type();
+        self::get_exclude_post_slug();
     }
 
     /**
-     * @var array $exclude_post_slug this post item is not included in breadcrumb
+     * this post type is not included in breadcrumb
      */
-    public static $exclude_post_slug = ['regional-overview', 'digital-id-region'];
+    public static function get_exclude_post_type() {
+        self::$excludePostType = get_option('helperbox_breadcrumb_exclude_post_type', self::$excludePostType);
+        self::$excludePostType = is_array(self::$excludePostType) ? self::$excludePostType : [];
+        return self::$excludePostType;
+    }
+
+    /**
+     *this post item is not included in breadcrumb
+     */
+    public static function get_exclude_post_slug() {
+        $value = get_option('helperbox_breadcrumb_exclude_post_slug', '');
+        self::$excludePostSlug = array_values(array_filter(array_map('trim', explode("\n", $value))));
+        return self::$excludePostSlug;
+    }
 
 
     /**
      * helperbox_breadcrumb_value
      * Get breadcrumb array values
      */
-    public static function helperbox_breadcrumb_value() {
+    public static function helperbox_breadcrumb_value($removeCondition = []) {
         // check setting
         if (get_option('helperbox_breadcrumb_feature', '1') != '1') {
             return;
@@ -49,6 +65,31 @@ class Breadcrumb {
             return '';
         }
 
+        // check removeCondition
+        if (isset($removeCondition['post_type'])) {
+            if (is_array($removeCondition['post_type']) && in_array(get_post_type(), array_keys($removeCondition['post_type']))) {
+                $currentPostCondition = isset($removeCondition['post_type'][get_post_type()]) ? $removeCondition['post_type'][get_post_type()] : [];
+                foreach ($currentPostCondition as $key => $condition) {
+                    if (is_array($condition)) {
+                        $meta_key = $condition['meta_key'];
+                        $meta_value = $condition['meta_value'];
+                        $get_meta_value = get_post_meta(get_the_ID(), $meta_key, true);
+                        if ($get_meta_value == $meta_value) {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        // // URL based removal
+        // if (!empty($conditions['url'])) {
+        //     $current_path = '/' . trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+        //     if (in_array($current_path, $conditions['url'], true)) {
+        //         return false; // remove breadcrumb
+        //     }
+        // }
+
+        // 
         $breadcrumbs = [
             [
                 'title' => 'Home',
@@ -59,7 +100,7 @@ class Breadcrumb {
         ];
         if (is_singular()) {
             $post_type = get_post_type();
-            if (!in_array($post_type, self::exclude_post_type())) {
+            if (!in_array($post_type, self::get_exclude_post_type())) {
                 $this_post_type_breadcrumb = [
                     'title' => get_post_type_object($post_type)->label,
                     'url' => (get_post_type_archive_link($post_type)) ?: '#',
@@ -81,7 +122,7 @@ class Breadcrumb {
                         'slug' => $slug,
                         'type' => 'singular',
                     ];
-                    if (in_array($slug, self::$exclude_post_slug)) {
+                    if (in_array($slug, self::get_exclude_post_slug())) {
                         continue;
                     }
                     array_unshift($child_breadcrumb, $this_breadcrumb);
@@ -93,6 +134,9 @@ class Breadcrumb {
                         'slug' => get_post_field('post_name'),
                         'type' => 'singular',
                     ];
+                    if (in_array(get_post_field('post_name'), self::get_exclude_post_slug())) {
+                        continue;
+                    }
                     array_push($child_breadcrumb, $this_breadcrumb);
                 }
             }
@@ -141,21 +185,24 @@ class Breadcrumb {
      * Get breadcrumb html content
      * @return html breadcrumbs content
      */
-    public static function get_helperbox_breadcrumb() {
-        // check setting
-        if (get_option('helperbox_breadcrumb_feature', '1') != '1') {
+    //    $removeCondition = [
+    //             'url'=>['/url1','/url2'],
+    //             'post_type' => [
+    //                 'region' => [
+    //                     [
+    //                         'meta_key' => 'type_of_region',
+    //                         'meta_value' => 'country',
+    //                     ]
+    //                 ]
+    //             ]
+    //         ];
+    public static function get_helperbox_breadcrumb($removeCondition = []) {
+
+        // get breadcrumb array value
+        $breadcrumbs = self::helperbox_breadcrumb_value($removeCondition);
+        if (!$breadcrumbs) {
             return;
         }
-
-        // don't show the breadcrumb in post type "region" or "digital-id" with type_of_region not equal to Country
-        if (get_post_type() === 'region' || get_post_type() === 'digital-id') {
-            $type_of_region = get_post_meta(get_the_ID(), 'type_of_region', true);
-            if ($type_of_region != 'country') {
-                return "";
-            }
-        }
-        // get breadcrumb array value
-        $breadcrumbs = self::helperbox_breadcrumb_value();
         ob_start(); ?>
         <div class="breadcrumb">
             <ul>

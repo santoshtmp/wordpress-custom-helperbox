@@ -92,7 +92,7 @@ class HelperBox {
      */
     function register_page_templates($post_templates) {
         // check setting
-        $theme_templates_dir = get_option('helperbox_custom_theme_templates_dir', '');
+        $theme_templates_dir = get_option('helperbox_custom_theme_templates_dir', Settings::CUSTOM_THEME_TEMP_DIR);
         if (!$theme_templates_dir) {
             return $post_templates;
         }
@@ -129,7 +129,7 @@ class HelperBox {
         */
     function page_template_to_subdir($templates = array()) {
         // check setting
-        $theme_templates_dir = get_option('helperbox_custom_theme_templates_dir', '');
+        $theme_templates_dir = get_option('helperbox_custom_theme_templates_dir', Settings::CUSTOM_THEME_TEMP_DIR);
         $theme_templates_dir = trim($theme_templates_dir, "/");
         if (!$theme_templates_dir) {
             return $templates;

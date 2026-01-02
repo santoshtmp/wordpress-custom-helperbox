@@ -19,6 +19,9 @@ if (!defined('ABSPATH')) {
  */
 class User_Role {
 
+    public const CLIENT_NAME = 'Helperbox Editor';
+
+
     /**
      * @var string $client_role
      */
@@ -27,7 +30,7 @@ class User_Role {
     /**
      * @var string helperbox_role_display_name
      */
-    public static $helperbox_role_display_name = 'Helperbox Editor';
+    public static $helperbox_role_display_name = SELF::CLIENT_NAME;
 
     /**
      * construction

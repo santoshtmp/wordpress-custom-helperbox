@@ -27,6 +27,9 @@ if (! defined('ABSPATH')) {
 class Settings {
 
     public const ADMIN_PAGE_SLUG = 'helperbox';
+    public const CUSTOM_THEME_TEMP_DIR = 'app/templates';
+    public const DEFAULT_BREADCRUMB_FEATURE = 0;
+    public const DEFAULT_CUSTOM_LOGINADMIN = 1;
     public const DEFAULT_LOGIN_BG = '#f1f1f1';
     public const DEFAULT_FORMLOGIN_BG = '#fff';
 
@@ -69,7 +72,7 @@ class Settings {
             $helperbox_general_settings_group,
             'helperbox_custom_theme_templates_dir',
             [
-                'type' => 'text',
+                'type' => 'string',
                 'sanitize_callback' => 'sanitize_text_field',
                 'default' => ""
             ]
@@ -79,7 +82,7 @@ class Settings {
             $helperbox_general_settings_group,
             'helperbox_user_role_name',
             [
-                'type' => 'text',
+                'type' => 'string',
                 'sanitize_callback' => 'sanitize_text_field',
                 'default' => ""
             ]
@@ -93,7 +96,7 @@ class Settings {
             [
                 'type'              => 'boolean',
                 'sanitize_callback' => 'rest_sanitize_boolean',
-                'default'           => true,
+                'default'           => false,
             ]
         );
 
@@ -104,6 +107,45 @@ class Settings {
                 'type' => 'array',
                 'sanitize_callback' => [$this, 'helperbox_sanitize_array_text_field'],
                 'default' => []
+            ]
+        );
+
+        register_setting(
+            $helperbox_breadcrumb_settings_group,
+            'helperbox_breadcrumb_exclude_post_slug',
+            [
+                'type' => 'string',
+                'sanitize_callback' => 'sanitize_textarea_field',
+                'default' => ""
+            ]
+        );
+
+        register_setting(
+            $helperbox_breadcrumb_settings_group,
+            'helperbox_breadcrumb_remove_condition',
+            [
+                'type' => 'string',
+                'sanitize_callback' => function ($value) {
+                    if (empty($value)) {
+                        return '';
+                    }
+
+                    $decoded = json_decode($value, true);
+
+                    // Invalid JSON → do not save
+                    if (json_last_error() !== JSON_ERROR_NONE) {
+                        add_settings_error(
+                            'helperbox_breadcrumb_remove_condition',
+                            'invalid_json',
+                            __('Invalid JSON format. Breadcrumb condition was not saved.', 'helperbox')
+                        );
+                        return '';
+                    }
+
+                    // Re-encode to normalize formatting
+                    return wp_json_encode($decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                },
+                'default' => ""
             ]
         );
 
