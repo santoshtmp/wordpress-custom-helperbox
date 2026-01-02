@@ -55,7 +55,7 @@ class SettingsTemp {
      */
     public static function temp_helperbox_general_settings_group() {
         settings_fields('helperbox_general_settings_group'); ?>
-        <table class="form-table">
+        <table class="form-table form-table-general" table-tab="general">
 
             <tr>
                 <th scope="row">
@@ -146,7 +146,7 @@ class SettingsTemp {
     public static function temp_helperbox_breadcrumb_settings_group() {
         settings_fields('helperbox_breadcrumb_settings_group');
         $breadcrumb_featureminlogin = get_option('helperbox_breadcrumb_feature', Settings::DEFAULT_BREADCRUMB_FEATURE); ?>
-        <table class="form-table" table-tab="breadcrumb">
+        <table class="form-table form-table-breadcrumb" table-tab="breadcrumb">
             <tr>
                 <th scope="row">
                     <label for="helperbox_breadcrumb_feature">
@@ -219,14 +219,14 @@ class SettingsTemp {
                                 Enter one post slug per line.
                             </p>
                             <p>
-                                Example:
+                                Example value:
                                 <?php echo "<pre>regional-overview" . "\n" . "digital-id-region</pre>" ?>
                             </p>
                         </div>
                     </td>
                 </tr>
 
-                <!-- <tr>
+                <tr>
                     <th scope="row">
                         <label for="helperbox_breadcrumb_remove_condition">
                             Condition to remove breadcrumb
@@ -234,35 +234,68 @@ class SettingsTemp {
                     </th>
                     <td>
                         <?php
-                        $placeholder_example = '{
-    "url": [
-        "/digital-id/regional-overview"
-    ],
-    "post_type": {
-        "region": {
-            {
-                "meta_key": "type_of_region",
-                "meta_value": "country"
-            }
-        }
-    }
-}';
+                        $breadcrumb_remove_condition = get_option('helperbox_breadcrumb_remove_condition', '');
+                        $placeholderRemoveCondition = [
+                            'url' => [
+                                '/url/path...'
+                            ],
+                            'post_type' => [
+                                'post_type_to_check...' => [
+                                    [
+                                        'meta_key' => 'meta_key_to_check...',
+                                        'meta_value' => 'meta_value_to_check...',
+                                    ]
+                                ]
+                            ]
+                        ];
+                        $exampleValue = [
+                            'post_type' => [
+                                'region' => [
+                                    [
+                                        'meta_key' => 'type_of_region',
+                                        'meta_value' => 'region',
+                                    ],
+                                    [
+                                        'meta_key' => 'type_of_region',
+                                        'meta_value' => 'sub-region',
+                                    ]
+                                ],
+                                'digital-id' => [
+                                    [
+                                        'meta_key' => 'type_of_region',
+                                        'meta_value' => 'region',
+                                    ],
+                                    [
+                                        'meta_key' => 'type_of_region',
+                                        'meta_value' => 'sub-region',
+                                    ]
+                                ]
+                            ]
+                        ];
                         ?>
                         <textarea
                             id="helperbox_breadcrumb_remove_condition"
                             name="helperbox_breadcrumb_remove_condition"
-                            rows="10"
-                            cols="60"
-                            class="large-text code"
-                            placeholder='<?php echo $placeholder_example; ?>'><?php echo esc_textarea(get_option('helperbox_breadcrumb_remove_condition', '')); ?></textarea>
-
+                            style="display: none;">
+                            <?php echo esc_textarea(trim($breadcrumb_remove_condition)); ?>
+                        </textarea>
+                        <div id="helperbox_breadcrumb_remove_condition_editor"><?php echo esc_textarea(trim($breadcrumb_remove_condition)); ?></div>
+                        <br>
+                        <p class="button" id="set_jsonformat_remove_condition"> Format JSON value</p>
                         <div class="description">
-                            <p>This will exclude/remove breadcrumbs based on the given conditions.
-                                Enter conditions in <strong>valid JSON format</strong>.</p>
+                            <p>This will exclude/remove breadcrumbs based on the given conditions pages.</p>
+                            <p>Enter conditions in <strong>valid JSON format as:</strong>.</p>
+                            <pre>
+<?php echo json_encode($placeholderRemoveCondition, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES); ?>
+                            </pre>
+                            <p>Example value:</p>
+                            <pre>
+<?php echo json_encode($exampleValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES); ?>
+                            </pre>
                         </div>
 
                     </td>
-                </tr> -->
+                </tr>
 
 
 
@@ -427,7 +460,7 @@ class SettingsTemp {
      */
     public static function temp_helperbox_security_settings_group() {
         settings_fields('helperbox_security_settings_group'); ?>
-        <table class="form-table" table-tab='security'>
+        <table class="form-table form-table-security" table-tab='security'>
             <tr>
                 <th scope="row">
                     <label for="helperbox_comment_feature">
@@ -561,12 +594,12 @@ class SettingsTemp {
                         name="helperbox_disable_emojicons"
                         id="helperbox_disable_emojicons"
                         value="1"
-                        <?php checked(get_option('helperbox_disable_emojicons')); ?>>
+                        <?php checked(get_option('helperbox_disable_emojicons', '1')); ?>>
                     <div class="description">
                         <p>
                             This will disable wp emojicons.
                         </p>
-                        <P>Default: unchecked </P>
+                        <P>Default: checked </P>
                     </div>
 
                 </td>

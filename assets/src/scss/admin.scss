@@ -1,5 +1,17 @@
 // admin css
 #helperbox_general_settings {
+
+    .form-table-breadcrumb {
+        #helperbox_breadcrumb_remove_condition_editor {
+            width: 100%;
+            height: 400px;
+        }
+
+        .ace_print-margin {
+            left: 0px !important;
+        }
+    }
+
     .form-table-adminlogin {
         .helperbox-media-preview {
             display: flex;
@@ -25,7 +37,7 @@
                     text-decoration: none;
                 }
             }
-            
+
         }
     }
 }

@@ -130,7 +130,7 @@ class Settings {
                         return '';
                     }
 
-                    $decoded = json_decode($value, true);
+                    $decoded = json_decode(trim($value), true);
 
                     // Invalid JSON → do not save
                     if (json_last_error() !== JSON_ERROR_NONE) {
@@ -143,7 +143,7 @@ class Settings {
                     }
 
                     // Re-encode to normalize formatting
-                    return wp_json_encode($decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                    return wp_json_encode($decoded);
                 },
                 'default' => ""
             ]
@@ -317,16 +317,14 @@ class Settings {
             'default'
         );
         $check_update_status = $_GET['check_update_status'] ?? 'false';
-        $active_tab = $_GET['tab'] ?? 'general';
-
-?>
+        $active_tab = $_GET['tab'] ?? 'general'; ?>
         <div class="wrap">
             <h1 class="wp-heading-inline">Custom Helper Box</h1>
             <?php
             if ($active_tab == 'security' && $check_update_status == 'true'):
                 SettingsTemp::temp_helperbox_available_update_list();
             else: ?>
-                <form method="post" action="options.php">
+                <form method="post" action="options.php" class="helperbox-setting-form-<?php echo esc_attr($active_tab); ?>">
                     <div id="poststuff">
                         <div id="post-body" class="metabox-holder columns-2">
                             <div id="post-body-content">

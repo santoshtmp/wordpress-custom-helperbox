@@ -65,6 +65,10 @@ class Breadcrumb {
             return '';
         }
 
+        // 
+        // $breadcrumb_remove_condition = get_option('helperbox_breadcrumb_remove_condition', '');
+        // $breadcrumb_remove_condition = json_encode($breadcrumb_remove_condition);
+
         // check removeCondition
         if (isset($removeCondition['post_type'])) {
             if (is_array($removeCondition['post_type']) && in_array(get_post_type(), array_keys($removeCondition['post_type']))) {

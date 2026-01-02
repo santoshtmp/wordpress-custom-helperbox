@@ -48,6 +48,28 @@ class Assets {
         //     'dataTables',
         //     'https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css'
         // );
+
+        // ace-editor
+        wp_register_script(
+            'helperbox-ace-editor',
+            'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js',
+            array('jquery'),
+            '1.0',
+            array(
+                'in_footer' => true,
+                'strategy' => 'defer'
+            )
+        );
+        wp_register_script(
+            'helperbox-ace-ext-beautify',
+            'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ext-beautify.js',
+            array('jquery'),
+            '1.0',
+            array(
+                'in_footer' => true,
+                'strategy' => 'defer'
+            )
+        );
     }
 
     /**
@@ -97,25 +119,33 @@ class Assets {
 
         // Only load on your settings page
         if ('settings_page_helperbox' == $hook) {
-            wp_enqueue_style('wp-color-picker');
-            wp_enqueue_script('wp-color-picker');
+            $active_tab = $_GET['tab'] ?? 'general';
+            if ($active_tab === 'breadcrumb'):
+                wp_enqueue_script('helperbox-ace-editor');
+                wp_enqueue_script('helperbox-ace-ext-beautify');
+            elseif ($active_tab === 'adminlogin'):
+                wp_enqueue_style('wp-color-picker');
+                wp_enqueue_script('wp-color-picker');
+                // Enqueue media uploader
+                // https://developer.wordpress.org/reference/functions/wp_enqueue_media/
+                wp_enqueue_media();
 
-            // Enqueue media uploader
-            // https://developer.wordpress.org/reference/functions/wp_enqueue_media/
-            wp_enqueue_media();
-
-            // Initialize the color picker
-            wp_add_inline_script(
-                'helperbox-admin-script',
-                '
+                // Initialize the color picker
+                wp_add_inline_script(
+                    'helperbox-admin-script',
+                    '
                     jQuery(document).ready(function($){
                         $("#helperbox_adminlogin_bgcolor").wpColorPicker();
                     });
                 '
-            );
+                );
+            endif;
+
+
             // localize script 
             wp_localize_script('helperbox-admin-script', 'helperboxJS', [
                 'settings_page_helperbox' => true,
+                'active_tab' => $active_tab
             ]);
         }
     }
