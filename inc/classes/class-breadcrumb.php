@@ -64,6 +64,8 @@ class Breadcrumb {
         if (is_front_page()) {
             return '';
         }
+        // 
+        $post_type = get_post_type();
 
         // 
         // $breadcrumb_remove_condition = get_option('helperbox_breadcrumb_remove_condition', '');
@@ -71,8 +73,8 @@ class Breadcrumb {
 
         // check removeCondition
         if (isset($removeCondition['post_type'])) {
-            if (is_array($removeCondition['post_type']) && in_array(get_post_type(), array_keys($removeCondition['post_type']))) {
-                $currentPostCondition = isset($removeCondition['post_type'][get_post_type()]) ? $removeCondition['post_type'][get_post_type()] : [];
+            if (is_array($removeCondition['post_type']) && in_array($post_type, array_keys($removeCondition['post_type']))) {
+                $currentPostCondition = isset($removeCondition['post_type'][$post_type]) ? $removeCondition['post_type'][$post_type] : [];
                 foreach ($currentPostCondition as $key => $condition) {
                     if (is_array($condition)) {
                         $meta_key = $condition['meta_key'];
@@ -103,7 +105,6 @@ class Breadcrumb {
             ]
         ];
         if (is_singular()) {
-            $post_type = get_post_type();
             if (!in_array($post_type, self::get_exclude_post_type())) {
                 $this_post_type_breadcrumb = [
                     'title' => get_post_type_object($post_type)->label,
