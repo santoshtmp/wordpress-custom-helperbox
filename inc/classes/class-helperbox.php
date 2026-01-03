@@ -39,6 +39,12 @@ class HelperBox {
         if (class_exists(User_Role::class)) {
             new User_Role();
         }
+        if (class_exists(Breadcrumb::class)) {
+            new Breadcrumb();
+        }
+        if (class_exists(Block_Pattern::class)) {
+            new Block_Pattern();
+        }
 
         // General hooks
         add_action('admin_notices', [$this, 'helperbox_admin_notices']);

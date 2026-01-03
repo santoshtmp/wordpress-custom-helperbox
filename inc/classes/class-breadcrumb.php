@@ -27,8 +27,7 @@ class Breadcrumb {
      * construction
      */
     function __construct() {
-        self::get_exclude_post_type();
-        self::get_exclude_post_slug();
+        add_shortcode('helperbox_breadcrumb_shortcode', [$this, 'get_helperbox_breadcrumb_shortcode_output']);
     }
 
     /**
@@ -67,13 +66,17 @@ class Breadcrumb {
         // 
         $post_type = get_post_type();
 
-        // 
-        // $breadcrumb_remove_condition = get_option('helperbox_breadcrumb_remove_condition', '');
-        // $breadcrumb_remove_condition = json_encode($breadcrumb_remove_condition);
+        // get remove condition from setting
+        $breadcrumb_remove_condition = get_option('helperbox_breadcrumb_remove_condition', '');
+        $breadcrumb_remove_condition = json_decode($breadcrumb_remove_condition, true);
+        if (is_array($breadcrumb_remove_condition) && !empty($breadcrumb_remove_condition)) {
+            $removeCondition = $breadcrumb_remove_condition;
+        }
 
         // check removeCondition
-        if (isset($removeCondition['post_type'])) {
-            if (is_array($removeCondition['post_type']) && in_array($post_type, array_keys($removeCondition['post_type']))) {
+        if ($removeCondition) {
+            // check post type based removal
+            if (isset($removeCondition['post_type']) && is_array($removeCondition['post_type']) && in_array($post_type, array_keys($removeCondition['post_type']))) {
                 $currentPostCondition = isset($removeCondition['post_type'][$post_type]) ? $removeCondition['post_type'][$post_type] : [];
                 foreach ($currentPostCondition as $key => $condition) {
                     if (is_array($condition)) {
@@ -86,14 +89,19 @@ class Breadcrumb {
                     }
                 }
             }
+            // URL based removal
+            if (isset($removeCondition['url']) && !empty($removeCondition['url']) && is_array($removeCondition['url'])) {
+                $current_url = home_url(add_query_arg(null, null));
+                $current_path = wp_parse_url($current_url, PHP_URL_PATH);
+                if (
+                    in_array($current_path, $removeCondition['url'], true) ||
+                    in_array($current_url, $removeCondition['url'], true) ||
+                    in_array(home_url() . $current_path, $removeCondition['url'], true)
+                ) {
+                    return false;
+                }
+            }
         }
-        // // URL based removal
-        // if (!empty($conditions['url'])) {
-        //     $current_path = '/' . trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-        //     if (in_array($current_path, $conditions['url'], true)) {
-        //         return false; // remove breadcrumb
-        //     }
-        // }
 
         // 
         $breadcrumbs = [
@@ -236,5 +244,10 @@ class Breadcrumb {
         $output = ob_get_contents();
         ob_end_clean();
         return $output;
+    }
+
+    // shortcode handler
+    public function get_helperbox_breadcrumb_shortcode_output() {
+        return self::get_helperbox_breadcrumb();
     }
 }

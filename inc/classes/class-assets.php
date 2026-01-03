@@ -53,22 +53,22 @@ class Assets {
         wp_register_script(
             'helperbox-ace-editor',
             'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js',
-            array('jquery'),
+            ['jquery'],
             '1.0',
-            array(
+            [
                 'in_footer' => true,
                 'strategy' => 'defer'
-            )
+            ]
         );
         wp_register_script(
             'helperbox-ace-ext-beautify',
             'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ext-beautify.js',
-            array('jquery'),
+            ['jquery'],
             '1.0',
-            array(
+            [
                 'in_footer' => true,
                 'strategy' => 'defer'
-            )
+            ]
         );
     }
 

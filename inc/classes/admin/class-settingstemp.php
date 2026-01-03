@@ -115,6 +115,24 @@ class SettingsTemp {
                 </td>
             </tr>
             <tr>
+                <th scope="row">
+                    <label for="helperbox_load_remote_block_patterns">
+                        Should load remote block patterns
+                    </label>
+                </th>
+                <td>
+                    <input
+                        type="checkbox"
+                        name="helperbox_load_remote_block_patterns"
+                        id="helperbox_load_remote_block_patterns"
+                        value="1"
+                        <?php checked(get_option('helperbox_load_remote_block_patterns', '')); ?>>
+                    <div class="description">
+                        <P>Default: unchecked </P>
+                    </div>
+                </td>
+            </tr>
+            <tr>
                 <th>
                     <p>Other availables add on plugins:</p>
                 </th>
@@ -229,7 +247,7 @@ class SettingsTemp {
                 <tr>
                     <th scope="row">
                         <label for="helperbox_breadcrumb_remove_condition">
-                            Condition to remove breadcrumb
+                            Remove breadcrumb based on given conditions.
                         </label>
                     </th>
                     <td>
@@ -292,6 +310,18 @@ class SettingsTemp {
                             <pre>
 <?php echo json_encode($exampleValue, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES); ?>
                             </pre>
+
+                            <p>To display breadcrumb:</p>
+                            <ol>
+                                <li>
+                                    Using shortcode
+                                    <pre>do_shortcode('[helperbox_breadcrumb_shortcode]');</pre>
+                                </li>
+                                <li>
+                                    Using PHP function
+                                    <pre>\Helperbox_Plugin\Breadcrumb::get_helperbox_breadcrumb();</pre>
+                                </li>
+                            </ol>
                         </div>
 
                     </td>

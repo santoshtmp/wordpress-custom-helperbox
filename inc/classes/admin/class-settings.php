@@ -88,6 +88,16 @@ class Settings {
             ]
         );
 
+        register_setting(
+            $helperbox_general_settings_group,
+            'helperbox_load_remote_block_patterns',
+            [
+                'type'              => 'boolean',
+                'sanitize_callback' => 'rest_sanitize_boolean',
+                'default'           => false,
+            ]
+        );
+
         // breadcrumb feature settings
         $helperbox_breadcrumb_settings_group = 'helperbox_breadcrumb_settings_group';
         register_setting(
@@ -125,6 +135,7 @@ class Settings {
             'helperbox_breadcrumb_remove_condition',
             [
                 'type' => 'string',
+                // 'sanitize_callback' => 'sanitize_textarea_field',
                 'sanitize_callback' => function ($value) {
                     if (empty($value)) {
                         return '';

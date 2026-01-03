@@ -9,11 +9,13 @@ jQuery(($) => {
                 const breadcrumbRemoveCondition = ace.edit("helperbox_breadcrumb_remove_condition_editor"); // div id to convert into editor
                 breadcrumbRemoveCondition.session.setMode("ace/mode/json"); // Set mode for JSON syntax highlighting
                 breadcrumbRemoveCondition.setTheme("ace/theme/monokai");  // Set a theme
-                formatJSON(breadcrumbRemoveCondition);
-
+                const removeConditionAlertMsg = "Please enter valid JSON for Remove Breadcrumb Condition.";
+                if (document.getElementById('helperbox_breadcrumb_remove_condition').value) {
+                    formatJSON(breadcrumbRemoveCondition, removeConditionAlertMsg);
+                }
                 // format json values
                 $('#set_jsonformat_remove_condition').on('click', function () {
-                    formatJSON(breadcrumbRemoveCondition);
+                    formatJSON(breadcrumbRemoveCondition, removeConditionAlertMsg);
                 });
 
                 // handle submit 
@@ -29,6 +31,7 @@ jQuery(($) => {
                             e.preventDefault();
                             console.error('invalid remove condition json value.');
                         }
+                        formatJSON(breadcrumbRemoveCondition, removeConditionAlertMsg);
                     }
                     if (valueIsValidJSON || (removeCondEditorValue == '')) {
                         document.getElementById('helperbox_breadcrumb_remove_condition').value = removeCondEditorValue;
@@ -43,7 +46,7 @@ jQuery(($) => {
             var bgImageFrame;
             var logoImageFrame;
 
-            // 
+            // set color picker
             $("#helperbox_adminlogin_formbgcolor").wpColorPicker();
 
             // Action when add btn is clicked
@@ -108,7 +111,7 @@ jQuery(($) => {
         );
     }
 
-    //
+    // media frame
     function mediaFrame(fieldName, frame, frameTitle, previewSection, isMultiple = false) {
         // Reuse existing frame if already created
         if (frame) {
@@ -149,8 +152,7 @@ jQuery(($) => {
 
     }
 
-    // 
-    // ceck is json is valid
+    // check if value is valid json
     const isValidJSON = str => {
         try {
             JSON.parse(str);
@@ -160,11 +162,14 @@ jQuery(($) => {
         }
     };
 
-    // formatJSON
-    function formatJSON(editor) {
+    // format JSON values
+    function formatJSON(editor, invalidAlertMsg = "Invalid JSON!") {
         try {
             // Get editor value and parse JSON
             var content = editor.getValue();
+            if (!content) {
+                return;
+            }
             var json = JSON.parse(content);
 
             // Format JSON with indentation
@@ -173,7 +178,7 @@ jQuery(($) => {
             // Set formatted JSON back to editor
             editor.setValue(formatted, 1); // 1 moves cursor to the end of the text
         } catch (e) {
-            alert("Invalid JSON!");
+            alert(invalidAlertMsg);
         }
     }
 

@@ -7,48 +7,6 @@ if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
 }
 
-
-/**
- * ================================================
- * block_categories_all for theme registr block
- * Adding a new (custom) block category
- * ================================================
- */
-if (!function_exists('new_block_category')) {
-	add_filter('block_categories_all', 'new_block_category');
-	function new_block_category($block_categories) {
-
-		// $block_categories[] = [
-		// 	'slug' => 'home',
-		// 	'title' => 'Blocks for homepage'
-		// ];
-
-		// $block_categories[] = [
-		// 	'slug' => 'seap',
-		// 	'title' => 'Custom Blocks for Seap'
-		// ];
-
-		// show the category at the top
-		array_unshift(
-			$block_categories,
-			[
-				'slug' => 'seap',
-				'title' => 'Custom Blocks for Seap'
-			]
-		);
-		array_unshift(
-			$block_categories,
-			[
-				'slug' => 'home',
-				'title' => 'Blocks for homepage'
-			]
-		);
-
-
-		return $block_categories;
-	}
-}
-
 // lib theme register blocks
 function custom_acf_register_block_type() {
 
@@ -267,7 +225,6 @@ add_action('init', 'custom_acf_register_block_type');
 
 
 // block asset optimization
-add_filter('should_load_separate_core_block_assets', '__return_true');
 
 
 
