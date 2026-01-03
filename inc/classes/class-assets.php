@@ -16,6 +16,13 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+/*
+ * Assets Class
+ * 
+ * https://developer.wordpress.org/reference/functions/wp_enqueue_script/
+ * https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+ * 
+ */
 class Assets {
 
     /**
@@ -23,10 +30,11 @@ class Assets {
      */
     function __construct() {
         add_action('init', [$this, 'helperbox_register_scripts']);
-        add_action('wp_enqueue_scripts', [$this, 'helperbox_enqueue_scripts'], 11);
-        add_action('enqueue_block_editor_assets', [$this, 'helperbox_enqueue_block_editor_assets'], 11);
-        add_action('admin_enqueue_scripts', [$this, 'helperbox_admin_scripts'], 20);
-        add_action('login_enqueue_scripts', [$this, 'helperbox_login_scripts'], 10);
+        add_action('wp_enqueue_scripts', [$this, 'helperbox_enqueue_scripts']);
+        add_action('enqueue_block_editor_assets', [$this, 'helperbox_enqueue_block_editor_assets']);
+        add_action('enqueue_block_assets', [$this, 'helperbox_enqueue_block_assets']);
+        add_action('admin_enqueue_scripts', [$this, 'helperbox_admin_enqueue_scripts'], 20);
+        add_action('login_enqueue_scripts', [$this, 'helperbox_login_enqueue_scripts'], 10);
 
         // Also add script to backend gutenberg
         // $styleURL = '';
@@ -34,7 +42,11 @@ class Assets {
     }
 
     /**
-     * Register Script
+     * Register all scripts and styles
+     * 
+     * Hooked to: init
+     *
+     * @return void
      */
     function helperbox_register_scripts() {
 
@@ -72,27 +84,63 @@ class Assets {
         );
     }
 
+
     /**
-     * Enqueue in frontend
+     * Enqueue assets for frontend only.
+     * https://developer.wordpress.org/reference/hooks/wp_enqueue_scripts/
+     *
+     * Hooked to: wp_enqueue_scripts
+     *
+     * @return void
      */
     function helperbox_enqueue_scripts() {
     }
 
     /**
-     * Enqueue assets for editor block.
+     * Enqueue assets for editor admin only.
+     * https://developer.wordpress.org/reference/hooks/enqueue_block_editor_assets/
      *
      * Hooked to: enqueue_block_editor_assets
      *
      * @return void
      */
     public function helperbox_enqueue_block_editor_assets() {
+        /**
+         * https://developer.wordpress.org/news/2024/01/29/how-to-disable-specific-blocks-in-wordpress/
+         */
+        wp_enqueue_script(
+            'helperbox-restrict-blocks',
+            helperbox_url . 'assets/build/js/blocks/restrict-blocks.js',
+            ['wp-blocks', 'wp-dom-ready', 'wp-edit-post'],
+            filemtime(helperbox_path . 'assets/build/js/blocks/restrict-blocks.js'),
+            array(
+                'strategy' => 'defer',
+                'in_footer' => true,
+            )
+        );
     }
 
     /**
-     * Enqueue in backend admin area
-     * 
+     * Enqueue assets for both frontend and backend editor.
+     * https://developer.wordpress.org/reference/hooks/enqueue_block_assets/
+     *
+     * Hooked to: enqueue_block_assets
+     *
+     * @return void
      */
-    public function helperbox_admin_scripts($hook) {
+    public function helperbox_enqueue_block_assets() {
+    }
+
+    /**
+     * Enqueue admin area scripts and styles
+     * https://developer.wordpress.org/reference/hooks/admin_enqueue_scripts/
+     * 
+     * Hooked to: admin_enqueue_scripts
+     *
+     * @param string $hook The current admin page.
+     * @return void
+     */
+    public function helperbox_admin_enqueue_scripts($hook) {
 
         if (file_exists(helperbox_path . 'assets/build/css/admin.css')) {
             wp_enqueue_style(
@@ -151,11 +199,14 @@ class Assets {
     }
 
     /**
-     * Login scripts
+     * Enqueue custom login page scripts and styles
+     * https://developer.wordpress.org/reference/hooks/login_enqueue_scripts/
      * 
+     * Hooked to: login_enqueue_scripts
+     *
      * @return void
      */
-    function helperbox_login_scripts() {
+    function helperbox_login_enqueue_scripts() {
 
         // check setting
         if (get_option('helperbox_custom_adminlogin', '1') != '1') {

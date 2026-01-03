@@ -216,7 +216,7 @@ class Settings {
         $helperbox_security_settings_group = 'helperbox_security_settings_group';
         register_setting(
             $helperbox_security_settings_group,
-            'helperbox_comment_feature',
+            'helperbox_disable_comment_feature',
             [
                 'type'              => 'boolean',
                 'sanitize_callback' => 'rest_sanitize_boolean',
@@ -333,7 +333,7 @@ class Settings {
             <h1 class="wp-heading-inline">Custom Helper Box</h1>
             <?php
             if ($active_tab == 'security' && $check_update_status == 'true'):
-                SettingsTemp::temp_helperbox_available_update_list();
+                Templates::get_template_helperbox_available_update_list();
             else: ?>
                 <form method="post" action="options.php" class="helperbox-setting-form-<?php echo esc_attr($active_tab); ?>">
                     <div id="poststuff">
@@ -359,15 +359,15 @@ class Settings {
      */
     function render_helperbox_general_settings_box() {
         $active_tab = $_GET['tab'] ?? 'general';
-        SettingsTemp::temp_helperbox_settings_group_nav_tab($active_tab);
+        Templates::get_template_helperbox_settings_group_nav_tab($active_tab);
         if ($active_tab === 'general') :
-            SettingsTemp::temp_helperbox_general_settings_group();
+            Templates::get_template_helperbox_general_settings_group();
         elseif ($active_tab === 'breadcrumb'):
-            SettingsTemp::temp_helperbox_breadcrumb_settings_group();
+            Templates::get_template_helperbox_breadcrumb_settings_group();
         elseif ($active_tab === 'adminlogin'):
-            SettingsTemp::temp_helperbox_adminlogin_settings_group();
+            Templates::get_template_helperbox_adminlogin_settings_group();
         elseif ($active_tab === 'security'):
-            SettingsTemp::temp_helperbox_security_settings_group();
+            Templates::get_template_helperbox_security_settings_group();
         endif;
     }
 

@@ -1,16 +1,17 @@
 <?php
 
 /**
- * Cover Block Patterns Template
- *
+ * Pattern Template Name: Helperbox Cover
+ * Pattern Description: A full width cover block with heading, paragraph and button.
+ * 
  * @package helperbox
  * 
  */
 
 ?>
 
-<!-- wp:cover {"url":"<?php echo esc_url( '/patterns/cover.jpg') ?>","id":3854,"minHeight":640,"align":"full","className":"helperbox-cover"} -->
-<div class="wp-block-cover alignfull has-background-dim helperbox-cover" style="background-image:url(<?php echo esc_url( '/patterns/cover.jpg') ?>);min-height:640px">
+<!-- wp:cover {"url":"<?php echo esc_url(helperbox_img_url . '/patterns/cover.jpg') ?>","minHeight":640,"align":"full","className":"helperbox-cover"} -->
+<div class="wp-block-cover alignfull has-background-dim helperbox-cover" style="background-image:url(<?php echo esc_url(helperbox_img_url . '/patterns/cover.jpg') ?>);min-height:640px">
     <div class="wp-block-cover__inner-container"><!-- wp:heading {"align":"center","level":1} -->
         <h1 class="has-text-align-center"><strong>Never let your memories be greater than your dreams</strong></h1>
         <!-- /wp:heading -->

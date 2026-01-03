@@ -34,12 +34,14 @@ if (!defined('helperbox_path')) {
 if (!defined('helperbox_basename')) {
     define('helperbox_basename', plugin_basename(__FILE__));
 }
+if (!defined('helperbox_img_url')) {
+    define('helperbox_img_url', plugin_dir_url(__FILE__) . 'assets/images/');
+}
 
 // autoload classes
 require_once __DIR__ . '/inc/helpers/autoload.php';
 
-// 
-
+// initialize the main class
 if (class_exists(HelperBox::class)) {
     new HelperBox();
 }

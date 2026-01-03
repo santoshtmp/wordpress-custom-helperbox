@@ -39,7 +39,7 @@ const jsEntries = {
   'js/helperbox': path.resolve(__dirname, 'src/js/helperbox.js'),
   'js/admin': path.resolve(__dirname, 'src/js/admin.js'),
   'js/login': path.resolve(__dirname, 'src/js/login.js'),
-  ...buildEntries('src/block-types/**/*.js', 'src'),
+  ...buildEntries('src/blocks/**/*.js', 'src'),
 };
 
 /**
@@ -49,7 +49,7 @@ const cssEntries = {
   'css/helperbox': path.resolve(__dirname, 'src/scss/helperbox.scss'),
   'css/admin': path.resolve(__dirname, 'src/scss/admin.scss'),
   'css/login': path.resolve(__dirname, 'src/scss/login.scss'),
-  ...buildEntries('src/block-types/**/*.scss', 'src'),
+  ...buildEntries('src/blocks/**/*.scss', 'src'),
 };
 
 /**

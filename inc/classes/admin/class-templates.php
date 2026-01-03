@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Helperbox admin SettingsTemp
+ * Helperbox admin Templates
  *
  * @package helperbox
  * 
@@ -9,7 +9,6 @@
 
 namespace Helperbox_Plugin\admin;
 
-use Helperbox_Plugin\Breadcrumb;
 use Helperbox_Plugin\User_Role;
 
 // Exit if accessed directly.
@@ -18,14 +17,14 @@ if (! defined('ABSPATH')) {
 }
 
 /**
- * SettingsTemp class
+ * Templates class
  */
-class SettingsTemp {
+class Templates {
 
     /**
      * 
      */
-    public static function temp_helperbox_settings_group_nav_tab($active_tab = 'general') { ?>
+    public static function get_template_helperbox_settings_group_nav_tab($active_tab = 'general') { ?>
         <h3 class="nav-tab-wrapper">
             <a href="?page=helperbox&tab=general"
                 class="nav-tab <?php echo ($active_tab === 'general') ? 'nav-tab-active' : ''; ?>">
@@ -53,7 +52,7 @@ class SettingsTemp {
     /**
      * 
      */
-    public static function temp_helperbox_general_settings_group() {
+    public static function get_template_helperbox_general_settings_group() {
         settings_fields('helperbox_general_settings_group'); ?>
         <table class="form-table form-table-general" table-tab="general">
 
@@ -161,7 +160,7 @@ class SettingsTemp {
     /**
      * 
      */
-    public static function temp_helperbox_breadcrumb_settings_group() {
+    public static function get_template_helperbox_breadcrumb_settings_group() {
         settings_fields('helperbox_breadcrumb_settings_group');
         $breadcrumb_featureminlogin = get_option('helperbox_breadcrumb_feature', Settings::DEFAULT_BREADCRUMB_FEATURE); ?>
         <table class="form-table form-table-breadcrumb" table-tab="breadcrumb">
@@ -339,7 +338,7 @@ class SettingsTemp {
     /**
      * 
      */
-    public static function temp_helperbox_adminlogin_settings_group() {
+    public static function get_template_helperbox_adminlogin_settings_group() {
         settings_fields('helperbox_adminlogin_settings_group');
         $custom_adminlogin = get_option('helperbox_custom_adminlogin', Settings::DEFAULT_CUSTOM_LOGINADMIN); ?>
         <table class="form-table form-table-adminlogin" table-tab="adminlogin">
@@ -488,22 +487,22 @@ class SettingsTemp {
     /**
      * 
      */
-    public static function temp_helperbox_security_settings_group() {
+    public static function get_template_helperbox_security_settings_group() {
         settings_fields('helperbox_security_settings_group'); ?>
         <table class="form-table form-table-security" table-tab='security'>
             <tr>
                 <th scope="row">
-                    <label for="helperbox_comment_feature">
+                    <label for="helperbox_disable_comment_feature">
                         Disable comment feature completely
                     </label>
                 </th>
                 <td>
                     <input
                         type="checkbox"
-                        name="helperbox_comment_feature"
-                        id="helperbox_comment_feature"
+                        name="helperbox_disable_comment_feature"
+                        id="helperbox_disable_comment_feature"
                         value="1"
-                        <?php checked(get_option('helperbox_comment_feature', '1')); ?>>
+                        <?php checked(get_option('helperbox_disable_comment_feature', '1')); ?>>
                     <div class="description">
                         <p>This will remove edit-comments.php page and close comments feature completely.</p>
                         <P>Default: checked </P>
@@ -674,8 +673,7 @@ class SettingsTemp {
     /**
      * 
      */
-    public static function temp_helperbox_available_update_list() {
-
+    public static function get_template_helperbox_available_update_list() {
 
         if (!current_user_can('manage_options')) {
             return;
@@ -692,9 +690,7 @@ class SettingsTemp {
         // theme
         $installed_themes = wp_get_themes();
         wp_update_themes();
-        $theme_updates  = get_site_transient('update_themes');
-
-    ?>
+        $theme_updates  = get_site_transient('update_themes');    ?>
         <div class="wrap">
 
             <h2 class="wp-heading-inline">Available Update Versions Status</h2>
@@ -790,9 +786,66 @@ class SettingsTemp {
                 Updates are shown for reference only. File modifications are disabled.
             </p>
         </div>
-<?php
+    <?php
     }
 
+    /**
+     * 
+     */
+    public static function get_template_notification_update_status_count() {
+        // check setting
+        if (get_option('helperbox_disallow_file', '1') != '1') {
+            return;
+        }
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        include_once ABSPATH . 'wp-admin/includes/update.php';
+        // plugin
+        wp_update_plugins();
+        $plugin_updates = get_site_transient('update_plugins');
+        // theme
+        wp_update_themes();
+        $theme_updates  = get_site_transient('update_themes');
+        // count
+        $plugin_count = count($plugin_updates->response);
+        $theme_count = count($theme_updates->response);
+
+    ?>
+        <div class="notice notice-success ">
+            <p>
+                <strong>HelperBox:</strong>
+                <a href="/wp-admin/options-general.php?page=helperbox&tab=security&check_update_status=true" target="_blank">
+                    Check available update versions status
+                </a>
+            <ul>
+                <li> <?php echo $plugin_count; ?> Plugin update available</li>
+                <li> <?php echo $theme_count; ?> Theme update available</li>
+            </ul>
+            </p>
+        </div>
+        <?php
+    }
+
+    /**
+     * 
+     */
+    public static function get_template_notification_file_mod_disable() {
+        $check_update_status = $_GET['check_update_status'] ?? 'false';
+        $active_tab = $_GET['tab'] ?? 'general';
+        if ($active_tab == 'security' && $check_update_status == 'true'):
+        ?>
+            <div class="notice notice-success ">
+                <p>Updates are shown for reference only. File modifications are disabled.</p>
+                <p>To apply updates, uncheck "Disallow file modifications through admin interface" option from Helperbox security settings</p>
+                <p>
+                    <a class="wp-core-ui button" href="/wp-admin/options-general.php?page=helperbox&tab=security">Check Helper Box Security Settings</a>
+                </p>
+            </div>
+<?php
+        endif;
+    }
     /**
      * ==== END ====
      */

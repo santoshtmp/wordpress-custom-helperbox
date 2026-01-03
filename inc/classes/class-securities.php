@@ -9,6 +9,7 @@
 
 namespace Helperbox_Plugin;
 
+use Helperbox_Plugin\admin\Check_Settings;
 use WP_Error;
 
 /**
@@ -201,7 +202,7 @@ class Securities {
     function disable_comment_feature() {
 
         // check setting
-        if (get_option('helperbox_comment_feature', '1') != '1') {
+        if (!Check_Settings::is_helperbox_disable_comment()) {
             return;
         }
 

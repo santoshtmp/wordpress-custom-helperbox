@@ -230,70 +230,7 @@ add_action('init', 'custom_acf_register_block_type');
 
 
 
-/**
- * ================================================
- * https://developer.wordpress.org/news/2024/01/29/how-to-disable-specific-blocks-in-wordpress/
- * https://developer.wordpress.org/reference/hooks/allowed_block_types_all/
- * ================================================
- */
-function allowed_block_types($allowed_block_types, $block_editor_context) {
-	try {
 
-		$allowed_block_types = [];
-		$disallowed_blocks = [
-			'core/legacy-widget',
-			'core/widget-group',
-			'core/archives',
-			'core/avatar',
-			'core/block',
-			'core/calendar',
-			'core/categories',
-			'core/footnotes',
-			'core/navigation',
-			'core/query',
-			'core/query-title',
-			'core/latest-posts',
-			'core/page-list',
-			'core/tag-cloud',
-			'core/post-terms',
-			'core/freeform'
-		];
-		$registered_blocks   = WP_Block_Type_Registry::get_instance()->get_all_registered();
-		// $allowed_block_types = array_keys( $registered_blocks );
-		foreach ($registered_blocks as $key => $value) {
-			if (str_contains($key, 'seap')) {
-				$allowed_block_types[] = $key;
-			} elseif (str_contains($key, 'comment')) {
-				$disallowed_blocks[] = $key;
-			} else {
-				$allowed_block_types[] = $key;
-			}
-		}
-		$filtered_blocks = array();
-		foreach ($allowed_block_types as $block) {
-			if (!in_array($block, $disallowed_blocks, true)) {
-				$filtered_blocks[] = $block;
-			}
-		}
-		return $filtered_blocks;
-	} catch (\Throwable $th) {
-		return true; //$allowed_block_types;
-	}
-}
-add_filter('allowed_block_types_all', 'allowed_block_types', 10, 2);
-
-/**
- * https://developer.wordpress.org/news/2024/01/29/how-to-disable-specific-blocks-in-wordpress/
- * Also locatied in assets/js/wp_blocks.js
- */
-function wp_blocks() {
-	wp_enqueue_script(
-		'wp_blocks',
-		get_stylesheet_directory_uri() . '/assets/js/wp_blocks.js',
-		array('wp-blocks', 'wp-dom-ready', 'wp-edit-post')
-	);
-}
-add_action('enqueue_block_editor_assets', 'wp_blocks');
 
 
 

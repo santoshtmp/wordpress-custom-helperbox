@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Block Patterns
+ * helperbox Patterns
  *
  * @package Helperbox
  */
@@ -9,13 +9,13 @@
 namespace Helperbox_Plugin;
 
 /**
- * Block_Pattern Class
+ * Patterns Class
  * https://developer.wordpress.org/block-editor/reference-guides/block-api/block-patterns/
  * https://developer.wordpress.org/reference/functions/register_block_pattern/
  * https://developer.wordpress.org/reference/functions/register_block_pattern_category/
  * 
  */
-class Block_Pattern {
+class Patterns {
 
     /**
      * construction
@@ -46,21 +46,36 @@ class Block_Pattern {
         // Ensure the function exists.
         if (function_exists('register_block_pattern')) {
             // pattern directory
-            $block_patterns = helperbox_path . 'block-patterns';
-            if (file_exists($block_patterns)) {
-                foreach (new \DirectoryIterator($block_patterns) as $file) {
+            $patterns_path = helperbox_path . 'patterns';
+            if (file_exists($patterns_path)) {
+                foreach (new \DirectoryIterator($patterns_path) as $file) {
                     if ($file->isDot() || !$file->isFile() || $file->getExtension() !== 'php') {
                         continue;
                     }
                     $filename = $file->getBasename('.php');
                     $filepath = $file->getPathname();
-                    $slug = 'helperbox/' . $filename;
-                    $patternTitle = ucwords(str_replace('-', ' ', $filename));
+                    // pattern slug
+                    $slug = 'helperbox/' . str_replace([' ', '-'], '_', strtolower($filename));
+                    // pattern title
+                    preg_match('|Pattern Template Name:(.*)$|mi', file_get_contents($filepath), $header);
+                    if (!empty($header)) {
+                        $patternTitle = trim(_cleanup_header_comment($header[1]));
+                    } else {
+                        $patternTitle = ucwords(str_replace(['_', '-'], ' ', $filename));
+                    }
+                    // pattern description
+                    preg_match('|Pattern Description:(.*)$|mi', file_get_contents($filepath), $desc_header);
+                    if (!empty($desc_header)) {
+                        $patternDescription = trim(_cleanup_header_comment($desc_header[1]));
+                    } else {
+                        $patternDescription = '';
+                    }
+                    // register pattern
                     register_block_pattern(
                         $slug,
                         [
                             'title'      => $patternTitle,
-                            'description' => '',
+                            'description' => $patternDescription ?? '',
                             'categories' => ['helperbox_pattern'],
                             'content'    => $this->get_pattern_content($filepath),
                         ]
