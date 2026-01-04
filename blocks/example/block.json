@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "my-plugin/latest-post",
+	"title": "Latest Post",
+	"category": "widgets",
+	"icon": "megaphone",
+	"description": "Displays the most recent post.",
+	"attributes": {
+		"numberOfPosts": {
+			"type": "integer",
+			"default": 1
+		}
+	},
+	"supports": {
+		"align": true
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

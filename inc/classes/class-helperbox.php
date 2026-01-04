@@ -46,8 +46,8 @@ class HelperBox {
         if (class_exists(Blocks::class)) {
             new Blocks();
         }
-        if (class_exists(Patterns::class)) {
-            new Patterns();
+        if (class_exists(Block_Patterns::class)) {
+            new Block_Patterns();
         }
 
         // General hooks

@@ -1,7 +1,7 @@
 {
-  "name": "seap/glossary",
-  "title": "Glossary",
-  "description": "Glossary section",
+  "name": "helperbox/glossary",
+  "title": "Helperbox Glossary",
+  "description": "Helperbox Glossary section",
   "attributes": {
     "align": {
       "type": "string",
@@ -27,7 +27,7 @@
   "viewScript": ["glossary"],
   "editorScript": [],
   "editorStyle": [],
-  "category": "seap",
+  "category": "helperbox_blocks",
   "icon": "",
   "keywords": [
     "glossary"

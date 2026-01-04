@@ -15,7 +15,7 @@ namespace Helperbox_Plugin;
  * https://developer.wordpress.org/reference/functions/register_block_pattern_category/
  * 
  */
-class Patterns {
+class Block_Patterns {
 
     /**
      * construction
@@ -46,7 +46,7 @@ class Patterns {
         // Ensure the function exists.
         if (function_exists('register_block_pattern')) {
             // pattern directory
-            $patterns_path = helperbox_path . 'patterns';
+            $patterns_path = helperbox_path . 'block-patterns';
             if (file_exists($patterns_path)) {
                 foreach (new \DirectoryIterator($patterns_path) as $file) {
                     if ($file->isDot() || !$file->isFile() || $file->getExtension() !== 'php') {
