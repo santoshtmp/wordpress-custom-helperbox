@@ -50,6 +50,34 @@ class Assets {
      */
     function helperbox_register_scripts() {
 
+        // register acf block assets from blocks folder
+        $block_js_files = glob(helperbox_path . 'assets/build/js/blocks/*/*.js');
+        foreach ($block_js_files as $file) {
+            $block_dir = dirname($file);
+            $block_folder_name = basename($block_dir);
+            wp_register_script(
+                $block_folder_name,
+                helperbox_url . 'assets/build/js/blocks/' . $block_folder_name . '/' . $block_folder_name . '.js',
+                ['jquery'],
+                filemtime($file),
+                [
+                    'in_footer' => true,
+                    'strategy' => 'defer',
+                ]
+            );
+        }
+        $block_css_files = glob(helperbox_path . 'assets/build/js/blocks/*/*.css');
+        foreach ($block_css_files as $file) {
+            $block_dir = dirname($file);
+            $block_folder_name = basename($block_dir);
+            wp_register_style(
+                $block_folder_name,
+                helperbox_url . 'assets/build/js/blocks/' . $block_folder_name . '/' . $block_folder_name . '.js',
+                [],
+                null
+            );
+        }
+
         // // dataTables https://datatables.net/
         // wp_register_script(
         //     'dataTables',

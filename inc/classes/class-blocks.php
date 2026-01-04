@@ -37,7 +37,7 @@ class Blocks {
     }
 
     public function init_action() {
-        $this->register_block_types();
+        $this->register_acf_block_types();
     }
 
     /**
@@ -112,53 +112,16 @@ class Blocks {
     /**
      * Register Block Types
      * https://developer.wordpress.org/block-editor/getting-started/fundamentals/registration-of-a-block/
+     * https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
      * 
      */
-    public function register_block_types() {
+    public function register_acf_block_types() {
         // Ensure the function exists.
         if (function_exists('register_block_type')) {
-            // Register the block type from the build directory.
-            // $path = dirname(__FILE__) . '/app/blocks';
-            $path = helperbox_path . 'blocks';
-
-            // register_block_type($path, [
-            //     'render_callback' => 'my_plugin_render_latest_post',
-            // ]);
-            if (file_exists($path)) {
-                foreach (new \DirectoryIterator($path) as $file) {
-                    if ($file->isDot())
-                        continue;
-
-                    if ($file->isDir()) {
-                        $dir = $path . '/' . $file->getFilename();
-                        $files = scandir($dir);
-
-                        foreach ($files as $filename) {
-
-                            if ($filename === '.' or $filename === '..') {
-                                continue;
-                            }
-
-                            $path_info_folder = pathinfo($filename);
-                            if (!isset($path_info_folder['extension'])) {
-                                continue;
-                            }
-
-                            // register block if json file found
-                            if ($path_info_folder['extension'] == 'json' && $filename) {
-                                register_block_type($dir . '/' . $path_info_folder['basename']);
-                            }
-
-
-                            $block_dir = $file->getPathname();
-
-                            // Only register if block.json exists
-                            if (file_exists($block_dir . '/block.json')) {
-                                register_block_type($block_dir);
-                            }
-                        }
-                    }
-                }
+            // Register a block.
+            $block_json_files = glob(helperbox_path . 'blocks/*/block.json');
+            foreach ($block_json_files as $file) {
+                register_block_type($file);
             }
         }
     }
