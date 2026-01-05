@@ -26,6 +26,10 @@ class HelperBox {
      * construction
      */
     function __construct() {
+        // 
+        if (!is_plugin_active('wordpress-custom-helperbox/custom-helperbox.php')) {
+            return;
+        }
 
         // 
         if (class_exists(Settings::class)) {

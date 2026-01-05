@@ -572,6 +572,12 @@ class Templates {
                             <li>To apply updates, disable this option and then check for <a href="/wp-admin/update-core.php" target="_blank"> core, plugin, or theme updates.</a></li>
                         </ul>
                         <P>Default: checked </P>
+                        <?php
+                        // echo DISALLOW_FILE_MODS;
+                        if (defined('DISALLOW_FILE_MODS_IN_WP_CONFIG') && DISALLOW_FILE_MODS_IN_WP_CONFIG) {
+                            echo '<p style="color:red;">Note: DISALLOW_FILE_EDIT and DISALLOW_FILE_MODS is already defined in wp-config.php. This setting will have no effect until it is removed from wp-config.php.</p>';
+                        }
+                        ?>
                     </div>
                 </td>
             </tr>
