@@ -1,0 +1,380 @@
+.site-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -20px;
+}
+
+.site-col {
+    padding: 0 20px 30px;
+}
+
+.col-3 {
+    width: 25%;
+}
+
+.col-4 {
+    width: 33.3333%;
+}
+
+h2 {
+    font-size: 42px;
+    line-height: 1.25;
+}
+
+h4 {
+    font-size: 24px;
+}
+
+.section-heading+.section-content-wrapper {
+    margin-top: 56px;
+}
+
+.wp-block-post-group a {
+    text-decoration: none;
+}
+
+/** Services Carousel CSS Starts here */
+
+/* Scope all styles to services carousel specifically */
+.wp-block-sophia-blocks-services-carousel {
+    /* Base styles */
+}
+
+.wp-block-sophia-blocks-services-carousel .wp-block-group-heading {
+    text-align: left;
+}
+
+.page-template-single-page-no-sidebar-full-width .wp-block-sophia-blocks-services-carousel .wp-block-group-heading,
+.page-template-blank .wp-block-sophia-blocks-services-carousel .wp-block-group-heading {
+    max-width: 100%;
+}
+
+.wp-block-sophia-blocks-services-carousel .services-title {
+    font-family: 'Merriweather', serif;
+    font-weight: 600;
+    color: var(--wp--preset--color--tan-brown);
+    font-size: 1.5rem;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+}
+
+.wp-block-sophia-blocks-services-carousel .services-subtitle {
+    font-weight: 500;
+    color: var(--wp--preset--color--foreground);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.wp-block-sophia-blocks-services-carousel .features-list {
+    color: var(--wp--preset--color--foreground);
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.wp-block-sophia-blocks-services-carousel .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.wp-block-sophia-blocks-services-carousel .feature-dot {
+    width: 4px;
+    height: 4px;
+    background-color: var(--wp--preset--color--foreground);
+    border-radius: 50%;
+    margin-top: 0.75rem;
+    flex-shrink: 0;
+}
+
+.wp-block-sophia-blocks-services-carousel .feature-text {
+    line-height: 1.69;
+}
+
+/* Services Carousel Container */
+.wp-block-sophia-blocks-services-carousel .services-carousel {
+    position: relative;
+}
+
+.wp-block-sophia-blocks-services-carousel .carousel-container {
+    margin-bottom: 2rem;
+    padding: 0;
+}
+
+.wp-block-sophia-blocks-services-carousel .carousel-overflow {
+    overflow: hidden;
+}
+
+.wp-block-sophia-blocks-services-carousel .carousel-track {
+    display: flex;
+    gap: 1.5rem;
+    transition: transform 0.3s ease-in-out;
+    will-change: transform;
+}
+
+/* Service Card */
+.wp-block-sophia-blocks-services-carousel .service-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.125rem;
+    align-items: center;
+    width: 139px;
+    flex-shrink: 0;
+}
+
+.wp-block-sophia-blocks-services-carousel .service-image-link {
+    position: relative;
+    width: 113px;
+    height: 113px;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: block;
+}
+
+.wp-block-sophia-blocks-services-carousel .service-image-link:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.wp-block-sophia-blocks-services-carousel .service-image-link:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(170, 141, 125, 0.3);
+}
+
+.wp-block-sophia-blocks-services-carousel .service-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.wp-block-sophia-blocks-services-carousel .service-card:hover .service-image {
+    transform: scale(1.1);
+}
+
+.wp-block-sophia-blocks-services-carousel .service-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0);
+    transition: background-color 0.3s ease;
+}
+
+.wp-block-sophia-blocks-services-carousel .service-card:hover .service-overlay {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.wp-block-sophia-blocks-services-carousel .service-name-link {
+    font-weight: 400;
+    color: #000000;
+    font-size: 1rem;
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+    transition: color 0.3s ease;
+}
+
+.wp-block-sophia-blocks-services-carousel .service-name-link:hover {
+    color: var(--wp--preset--color--link-color);
+}
+
+.wp-block-sophia-blocks-services-carousel .service-name {
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Navigation - scoped to services carousel */
+.wp-block-sophia-blocks-services-carousel .carousel-navigation {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.wp-block-sophia-blocks-services-carousel .nav-button {
+    background-color: var(--wp--preset--color--tab-bg);
+    border: none;
+    padding: 0.75rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aa8d7d;
+}
+
+.wp-block-sophia-blocks-services-carousel .nav-button:hover:not(:disabled),
+.wp-block-sophia-blocks-services-carousel .nav-button:focus:not(:disabled) {
+    background-color: var(--wp--preset--color--body-background-deep);
+    transform: translateY(-1px);
+}
+
+.wp-block-sophia-blocks-services-carousel .nav-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.wp-block-sophia-blocks-services-carousel .nav-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--wp--preset--color--tertiary);
+    transform: none;
+}
+
+.wp-block-sophia-blocks-services-carousel .nav-button svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Responsive Design - scoped to services carousel */
+@media (min-width: 768px) {
+    .wp-block-sophia-blocks-services-carousel .services-section {
+        padding: 2rem;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .services-header {
+        margin-bottom: 4rem;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .header-content {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .header-text {
+        flex: 1;
+        margin-right: 2rem;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .services-title {
+        font-size: 2.25rem;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .services-subtitle {
+        font-size: 1.125rem;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .features-list {
+        width: 380px;
+        flex-shrink: 0;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .carousel-track {
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 1023px) {
+    .wp-block-sophia-blocks-services-carousel .wp-block-group-heading .wp-block-columns .wp-block-column {
+        flex-basis: 100% !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .wp-block-sophia-blocks-services-carousel .services-title {
+        font-size: 2.5rem;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .carousel-track {
+        gap: 1.85rem;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .wp-block-group-heading .wp-block-columns {
+        flex-wrap: nowrap;
+    }
+}
+
+/* Touch and Mobile Enhancements - scoped to services carousel */
+@media (max-width: 767px) {
+    .wp-block-sophia-blocks-services-carousel .carousel-track {
+        gap: 1rem;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .service-card {
+        width: 120px;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .service-image-link {
+        width: 100px;
+        height: 100px;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .service-name {
+        font-size: 0.875rem;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .nav-button {
+        padding: 0.625rem;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .nav-button svg {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+}
+
+/* High-contrast mode support - scoped to services carousel */
+@media (prefers-contrast: high) {
+    .wp-block-sophia-blocks-services-carousel .service-overlay {
+        border: 2px solid transparent;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .service-card:hover .service-overlay {
+        border-color: #000000;
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .wp-block-sophia-blocks-services-carousel .nav-button {
+        border: 2px solid var(--wp--preset--color--secondary-text);
+    }
+}
+
+/* Reduced motion support - scoped to services carousel */
+@media (prefers-reduced-motion: reduce) {
+    .wp-block-sophia-blocks-services-carousel .carousel-track {
+        transition: none;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .service-image-link,
+    .wp-block-sophia-blocks-services-carousel .service-image,
+    .wp-block-sophia-blocks-services-carousel .service-overlay,
+    .wp-block-sophia-blocks-services-carousel .service-name-link,
+    .wp-block-sophia-blocks-services-carousel .nav-button {
+        transition: none;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .service-card {
+        animation: none;
+        opacity: 1;
+    }
+}
+
+/* Print styles - scoped to services carousel */
+@media print {
+    .wp-block-sophia-blocks-services-carousel .services-section {
+        background-color: white;
+        color: black;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .carousel-navigation {
+        display: none;
+    }
+
+    .wp-block-sophia-blocks-services-carousel .carousel-track {
+        transform: none !important;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* Global styles that don't conflict */
+body .is-layout-flex {
+    display: flex;
+}
+
+.wp-block-group-heading {
+    margin-bottom: var(--wp--custom--spacing--group-heading-bottom-gap);
+}

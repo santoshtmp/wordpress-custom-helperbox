@@ -1,10 +1,10 @@
 jQuery(($) => {
 
     // For settings_page_helperbox
-    if (typeof helperboxJS !== 'undefined' && helperboxJS.settings_page_helperbox) {
+    if ('undefined' !== typeof helperboxJS && helperboxJS.settings_page_helperbox) {
 
         // 
-        if (helperboxJS.active_tab == 'breadcrumb') {
+        if ('breadcrumb' == helperboxJS.active_tab) {
             if (document.getElementById('helperbox_breadcrumb_remove_condition_editor')) {
                 const breadcrumbRemoveCondition = ace.edit("helperbox_breadcrumb_remove_condition_editor"); // div id to convert into editor
                 breadcrumbRemoveCondition.session.setMode("ace/mode/json"); // Set mode for JSON syntax highlighting
@@ -33,7 +33,7 @@ jQuery(($) => {
                         }
                         formatJSON(breadcrumbRemoveCondition, removeConditionAlertMsg);
                     }
-                    if (valueIsValidJSON || (removeCondEditorValue == '')) {
+                    if (valueIsValidJSON || ('' == removeCondEditorValue)) {
                         document.getElementById('helperbox_breadcrumb_remove_condition').value = removeCondEditorValue;
                     }
                 });
@@ -42,9 +42,9 @@ jQuery(($) => {
 
         }
         // adminlogin
-        if (helperboxJS.active_tab == 'adminlogin') {
-            var bgImageFrame;
-            var logoImageFrame;
+        if ('adminlogin' == helperboxJS.active_tab) {
+            let bgImageFrame;
+            let logoImageFrame;
 
             // set color picker
             $("#helperbox_adminlogin_formbgcolor").wpColorPicker();
@@ -77,8 +77,10 @@ jQuery(($) => {
             // Handle remove button click
             $(document).on('click', '.remove-image', function (e) {
                 e.preventDefault();
-                var attachmentId = $(this).data('attachment-id');
-                $('.selected-image-' + attachmentId).remove();
+                let attachmentId = $(this).data('attachment-id');
+                if (attachmentId) {
+                    $('.selected-image-' + attachmentId).remove();
+                }
             });
         }
     }
@@ -90,11 +92,11 @@ jQuery(($) => {
             return;
         }
         // Safely escape attributes
-        var imgSrc = attachment.url.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
-        var attachmentId = parseInt(attachment.id, 10);
+        let imgSrc = attachment.url.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+        let attachmentId = parseInt(attachment.id, 10);
 
         // Unique container for this image
-        var containerClass = 'selected-image-' + attachmentId;
+        let containerClass = 'selected-image-' + attachmentId;
 
         return (
             '<div class="selected-image ' + containerClass + '" >' +
@@ -134,17 +136,17 @@ jQuery(($) => {
         // When images are selected
         frame.on('select', function () {
             if (isMultiple) {
-                var attachments = frame.state().get('selection').toJSON();
+                let attachments = frame.state().get('selection').toJSON();
                 attachments.forEach((attachment) => {
                     previewSection.append(previewAttachment(fieldName, attachment));
                 });
             } else {
-                var attachment = frame.state().get('selection').first().toJSON();
+                let attachment = frame.state().get('selection').first().toJSON();
                 previewSection.html(previewAttachment(fieldName, attachment));
             }
-
+            // Show "Remove All" button if multiple
             if (isMultiple) {
-                $removeAll.show();
+                // $('.helperbox-delete-all-media').show();
             }
         });
 
@@ -166,14 +168,14 @@ jQuery(($) => {
     function formatJSON(editor, invalidAlertMsg = "Invalid JSON!") {
         try {
             // Get editor value and parse JSON
-            var content = editor.getValue();
+            let content = editor.getValue();
             if (!content) {
                 return;
             }
-            var json = JSON.parse(content);
+            let json = JSON.parse(content);
 
             // Format JSON with indentation
-            var formatted = JSON.stringify(json, null, 4);
+            let formatted = JSON.stringify(json, null, 4);
 
             // Set formatted JSON back to editor
             editor.setValue(formatted, 1); // 1 moves cursor to the end of the text

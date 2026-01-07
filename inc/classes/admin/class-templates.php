@@ -575,7 +575,7 @@ class Templates {
                         <?php
                         // echo DISALLOW_FILE_MODS;
                         if (defined('DISALLOW_FILE_MODS_IN_WP_CONFIG') && DISALLOW_FILE_MODS_IN_WP_CONFIG) {
-                            echo '<p style="color:red;">Note: DISALLOW_FILE_EDIT and DISALLOW_FILE_MODS is already defined in wp-config.php. This setting will have no effect until it is removed from wp-config.php.</p>';
+                            echo '<p style="color:red;">Note: DISALLOW_FILE_EDIT or DISALLOW_FILE_MODS is already defined in wp-config.php. This setting will have no effect until it is removed from wp-config.php.</p>';
                         }
                         ?>
                     </div>

@@ -1,6 +1,6 @@
 jQuery(($) => {
   $("#login").wrap("<div class='helperbox-login'></div>");
-  if (typeof helperboxJS !== 'undefined') {
+  if ('undefined' !== typeof helperboxJS) {
     // check body class
     if (!$('body').hasClass(helperboxJS.bodyClass)) {
       $('body').addClass(helperboxJS.bodyClass)

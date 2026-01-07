@@ -196,6 +196,22 @@ class HelperBox {
         }
     }
 
+    /**
+     * =======================================================
+     * https://developer.wordpress.org/reference/hooks/upload_mimes/
+     * =======================================================
+     */
+    function cc_mime_types($mimes) {
+        // New allowed mime types.
+        $mimes['json'] = 'text/plain';
+        $mimes['svg'] = 'image/svg+xml';
+        $mime_types['mp4'] = 'video/mp4';
+        // Remove a mime type.
+        unset($mimes['exe']);
+        return $mimes;
+    }
+    // add_filter('upload_mimes', 'cc_mime_types');
+
 
     /**
      * === END ===

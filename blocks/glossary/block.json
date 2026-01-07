@@ -5,12 +5,12 @@
   "attributes": {
     "align": {
       "type": "string",
-      "default": "none"
+      "default": "full"
     }
   },
   "supports": {
     "align": [
-      "wide"
+      "full"
     ],
     "anchor": false,
     "className": true,
@@ -20,11 +20,14 @@
     "attributes": {
       "align": {
         "type": "string",
-        "default": "none"
+        "default": "full"
       }
     }
   },
-  "viewScript": ["glossary"],
+  "viewScript": [
+    "glossary"
+  ],
+  "viewStyle": [],
   "editorScript": [],
   "editorStyle": [],
   "category": "helperbox_blocks",

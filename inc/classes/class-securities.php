@@ -264,7 +264,7 @@ class Securities {
      */
     function disable_plugin_modifications() {
         // Check if DISALLOW_FILE_EDIT and DISALLOW_FILE_MODS are already defined in wp-config.php
-        if (defined('DISALLOW_FILE_EDIT') && DISALLOW_FILE_EDIT && defined('DISALLOW_FILE_MODS') && DISALLOW_FILE_MODS) {
+        if ((defined('DISALLOW_FILE_EDIT') && DISALLOW_FILE_EDIT) || (defined('DISALLOW_FILE_MODS') && DISALLOW_FILE_MODS)) {
             define('DISALLOW_FILE_MODS_IN_WP_CONFIG', true);
             return;
         }

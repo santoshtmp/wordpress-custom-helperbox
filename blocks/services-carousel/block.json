@@ -1,0 +1,24 @@
+{
+    "apiVersion": 2,
+    "name": "sophia-blocks/services-carousel",
+    "title": "Services Carousel",
+    "category": "sophia-blocks",
+    "icon": "format-status",
+    "editorScript": "sophia-services-carousel-editor",
+    "viewStyle": "sophia-services-carousel-style",
+    "editorStyle": "sophia-services-carousel-style",
+    "viewScript": "sophia-services-carousel-script",
+    "render": "file:./render.php",
+    "description": "A beautiful carousel showcasing your services with inline editing",
+    "attributes": {
+        "faqs": {
+            "type": "array",
+            "default": []
+        }
+    },
+    "example": {
+        "preview": {
+             "image": "file:./preview.png"
+        }
+    }
+}

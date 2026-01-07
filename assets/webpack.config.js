@@ -1,15 +1,18 @@
 /**
- * Webpack configuration.
+ * Webpack configuration
  */
-
 import path from 'path';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
-import autoprefixer from 'autoprefixer';
-import { fileURLToPath } from 'url';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import DependencyExtractionWebpackPlugin from '@wordpress/dependency-extraction-webpack-plugin';
+import webpack from 'webpack';
 import { globSync } from 'glob';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import { fileURLToPath } from 'url';
 
-// __dirname replacement for ESM
+
+// Fix for __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -17,141 +20,174 @@ const __dirname = path.dirname(__filename);
  * Helper to build named entries
  */
 const buildEntries = (pattern, baseDir) => {
-  const entries = {};
+    const entries = {};
 
-  globSync(pattern).forEach((file) => {
-    let ext = path.extname(file).replace('.', ''); // js | scss
-    ext = ext === 'scss' ? 'css' : ext;
-    const name = `${ext}/` + path
-      .relative(baseDir, file)
-      .replace(path.extname(file), '');
+    globSync(pattern).forEach((file) => {
+        let ext = path.extname(file).replace('.', ''); // js | scss
+        ext = ext === 'scss' ? 'css' : ext;
+        const name = `${ext}/` + path
+            .relative(baseDir, file)
+            .replace(path.extname(file), '');
 
-    entries[name] = path.resolve(__dirname, file);
-  });
+        entries[name] = path.resolve(__dirname, file);
+    });
 
-  return entries;
+    return entries;
 };
 
 /**
  * JS entries
  */
 const jsEntries = {
-  'js/helperbox': path.resolve(__dirname, 'src/js/helperbox.js'),
-  'js/admin': path.resolve(__dirname, 'src/js/admin.js'),
-  'js/login': path.resolve(__dirname, 'src/js/login.js'),
-  ...buildEntries('src/blocks/**/*.js', 'src'),
+    'js/helperbox': path.resolve(__dirname, 'src/js/helperbox.js'),
+    'js/admin': path.resolve(__dirname, 'src/js/admin.js'),
+    'js/login': path.resolve(__dirname, 'src/js/login.js'),
+    ...buildEntries('src/blocks/**/*.js', 'src'),
 };
 
 /**
  * SCSS entries
  */
 const cssEntries = {
-  'css/helperbox': path.resolve(__dirname, 'src/scss/helperbox.scss'),
-  'css/admin': path.resolve(__dirname, 'src/scss/admin.scss'),
-  'css/login': path.resolve(__dirname, 'src/scss/login.scss'),
-  ...buildEntries('src/blocks/**/*.scss', 'src'),
+    'css/helperbox': path.resolve(__dirname, 'src/scss/helperbox.scss'),
+    'css/admin': path.resolve(__dirname, 'src/scss/admin.scss'),
+    'css/login': path.resolve(__dirname, 'src/scss/login.scss'),
+    ...buildEntries('src/blocks/**/*.scss', 'src'),
 };
 
-/**
- * 
- */
-export default (env, argv) => {
-  const isDev = argv.mode !== 'production';
 
-  return {
-    mode: isDev ? 'development' : 'production',
 
-    entry: {
-      ...jsEntries,
-      ...cssEntries,
-    },
-
-    context: path.resolve(__dirname, 'src'),
-
-    output: {
-      path: path.resolve(__dirname, 'build'),
-      filename: '[name].js',
-      clean: true,
-    },
-
-    module: {
-      rules: [
-        // JS
-        {
-          test: /\.js$/,
-          include: [...Object.values(jsEntries)],
-          exclude: /node_modules/,
-          use: {
+const exportModuleRules = [
+    // JavaScript / JSX (React)
+    {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
             loader: 'babel-loader',
             options: {
-              presets: [
-                [
-                  '@babel/preset-env',
-                  {
-                    targets: '> 0.25%, not dead',
-                  },
+                presets: [
+                    '@babel/preset-env',
+                    '@babel/preset-react'
                 ],
-              ],
             },
-          },
         },
-        // SCSS SASS
-        {
-          test: /\.(sa|sc|c)ss$/,
-          include: [...Object.values(cssEntries)],
-          use: [
+    },
+
+    // SCSS, SASS, CSS → CSS (with Tailwind, PostCSS, Autoprefixer)
+    {
+        test: /\.(sa|sc|c)ss$/,
+        use: [
             MiniCssExtractPlugin.loader,
+            'css-loader',
             {
-              loader: 'css-loader',
-              options: {
-                sourceMap: isDev,
-              },
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                sourceMap: isDev,
-                postcssOptions: {
-                  plugins: [
-                    autoprefixer(),
-                  ],
+                loader: 'postcss-loader',
+                options: {
+                    postcssOptions: {
+                        plugins: [
+                            'autoprefixer',
+                        ],
+                    },
                 },
-              },
             },
+            'sass-loader',
+        ],
+    },
+
+    // SVG → React component (for @wordpress/icons or custom icons)
+    {
+        test: /\.svg$/,
+        issuer: /\.(js|jsx)$/,
+        use: [
             {
-              loader: 'sass-loader',
-              options: {
-                sourceMap: isDev,
-              },
+                loader: '@svgr/webpack',
+                options: {
+                    svgoConfig: {
+                        plugins: [{ name: 'removeViewBox', active: false }],
+                    },
+                },
             },
-          ],
-        },
-        // Images
-        {
-          test: /\.(png|jpe?g|gif|svg|ico|webp)$/i,
-          type: 'asset/resource',
-          generator: {
+        ],
+    },
+
+    // Other assets (images, fonts) as files
+    {
+        test: /\.(png|jpe?g|gif|webp|woff2?|ttf|eot|ico|svg)$/,
+        type: 'asset/resource',
+        generator: {
             filename: '[path][name][ext]',
-          },
         },
-      ],
-    },
+    }
+]
 
-    plugins: [
-      new RemoveEmptyScriptsPlugin(),
-      new MiniCssExtractPlugin({
+/**
+ * Webpack plugins
+ */
+const exportPlugins = [
+
+    new RemoveEmptyScriptsPlugin(),
+
+    new CleanWebpackPlugin({
+        cleanOnceBeforeBuildPatterns: ['**/*', '!*.php', '!block.json'],
+    }),
+
+    new MiniCssExtractPlugin({
         filename: '[name].css',
-      }),
-    ],
+    }),
 
-    devtool: isDev ? 'source-map' : false,
+    // Critical: Extract WordPress dependencies as externals
+    new DependencyExtractionWebpackPlugin({
+        injectPolyfill: true,
+        combineAssets: true,
+    }),
 
-    performance: {
-      maxAssetSize: 1048576,
-      maxEntrypointSize: 1048576,
-      hints: 'warning',
-    },
+    // Copy PHP files, block.json, etc. to build folder
+    new CopyWebpackPlugin({
+        patterns: [
+            { from: 'src/blocks/**/*.php', to: '[path][name][ext]', noErrorOnMissing: true, },
+            { from: 'src/blocks/**/block.json', to: '[path][name][ext]', noErrorOnMissing: true, },
+            // Add more if needed (e.g., languages/*.mo)
+        ],
+    }),
 
-    stats: 'minimal',
-  };
+    // Show build progress
+    new webpack.ProgressPlugin(),
+];
+
+/**
+ * Webpack configuration export
+ */
+export default () => {
+    return {
+        entry: {
+            ...jsEntries,
+            ...cssEntries,
+        },
+        context: path.resolve(__dirname, 'src'),
+
+        output: {
+            path: path.resolve(__dirname, 'build'),
+            filename: '[name].js',
+            clean: false, // OR Handled by CleanWebpackPlugin
+        },
+
+        module: {
+            rules: exportModuleRules,
+        },
+
+        plugins: exportPlugins,
+
+        resolve: {
+            extensions: ['.js', '.jsx', '.json'],
+        },
+
+        performance: {
+            maxAssetSize: 1048576,
+            maxEntrypointSize: 1048576,
+            hints: 'warning',
+        },
+
+        externals: {
+            // Optional: Add manual externals if needed
+        },
+    };
 };
