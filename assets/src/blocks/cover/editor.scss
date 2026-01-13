@@ -1,0 +1,17 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-create-block-todo-list {
+	border: 1px dotted #f00;
+}
+
+.helperbox-edit-media-field-group-control{
+	margin-bottom: 12px;
+    gap: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}

@@ -1,4 +1,10 @@
 /**
+ * External dependencies
+ */
+// import $ from 'jquery';
+
+
+/**
  * Unregister specific embed block variations.
  *  https://developer.wordpress.org/news/2024/01/29/how-to-disable-specific-blocks-in-wordpress/
  *  https://developer.wordpress.org/reference/hooks/allowed_block_types_all/

@@ -58,11 +58,12 @@ class HelperBox {
         add_action('admin_notices', [$this, 'helperbox_admin_notices']);
         add_filter('theme_page_templates', [$this, 'register_page_templates']);
         add_filter('page_template_hierarchy', [$this, 'page_template_to_subdir']);
+        add_filter('upload_mimes', [$this, 'helperbox_upload_mimes']);
 
         // include api path
         $include_dir_paths = [
-            helperbox_path . 'endpoint/rest',
-            helperbox_path . 'endpoint/ajax',
+            HELPERBOX_PATH . 'endpoint/rest',
+            HELPERBOX_PATH . 'endpoint/ajax',
 
         ];
         self::requires_dir_paths_files($include_dir_paths);
@@ -201,16 +202,20 @@ class HelperBox {
      * https://developer.wordpress.org/reference/hooks/upload_mimes/
      * =======================================================
      */
-    function cc_mime_types($mimes) {
-        // New allowed mime types.
-        $mimes['json'] = 'text/plain';
-        $mimes['svg'] = 'image/svg+xml';
-        $mime_types['mp4'] = 'video/mp4';
+    function helperbox_upload_mimes($mimes) {
+        // New allowed mime types.        
+        $option = \Helperbox_Plugin\admin\Check_Settings::get_helperbox_mimes_file_types();
+        $mimes_file_types = \Helperbox_Plugin\admin\Settings::MIMES_FILE_TYPES;
+        foreach ($option as $file_type) {
+            $setting = $mimes_file_types[$file_type] ?? '';
+            if ($setting) {
+                $mimes[$setting['value']] = $setting['mimes_value'];
+            }
+        }
         // Remove a mime type.
         unset($mimes['exe']);
         return $mimes;
     }
-    // add_filter('upload_mimes', 'cc_mime_types');
 
 
     /**

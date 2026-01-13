@@ -25,7 +25,7 @@ const buildEntries = (pattern, baseDir) => {
     globSync(pattern).forEach((file) => {
         let ext = path.extname(file).replace('.', ''); // js | scss
         ext = ext === 'scss' ? 'css' : ext;
-        const name = `${ext}/` + path
+        const name = path
             .relative(baseDir, file)
             .replace(path.extname(file), '');
 
@@ -111,7 +111,7 @@ const exportModuleRules = [
 
     // Other assets (images, fonts) as files
     {
-        test: /\.(png|jpe?g|gif|webp|woff2?|ttf|eot|ico|svg)$/,
+        test: /\.(png|jpe?g|gif|webp|woff2?|ttf|eot|ico|svg|json)$/,
         type: 'asset/resource',
         generator: {
             filename: '[path][name][ext]',

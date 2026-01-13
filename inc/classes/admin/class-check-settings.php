@@ -36,4 +36,13 @@ class Check_Settings {
         }
         return false;
     }
+
+    /**
+     * 
+     */
+    public static function get_helperbox_mimes_file_types() {
+        $option = get_option('helperbox_mimes_file_types', []);
+        $option = is_array($option) ? $option : [];
+        return $option;
+    }
 }

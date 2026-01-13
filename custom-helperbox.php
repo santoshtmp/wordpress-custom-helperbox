@@ -25,17 +25,17 @@ if (!defined('ABSPATH')) {
 }
 
 // define helperbox constant named
-if (!defined('helperbox_url')) {
-    define('helperbox_url', plugin_dir_url(__FILE__));
+if (!defined('HELPERBOX_URL')) {
+    define('HELPERBOX_URL', plugin_dir_url(__FILE__));
 }
-if (!defined('helperbox_path')) {
-    define('helperbox_path', plugin_dir_path(__FILE__));
+if (!defined('HELPERBOX_PATH')) {
+    define('HELPERBOX_PATH', plugin_dir_path(__FILE__));
 }
 if (!defined('helperbox_basename')) {
     define('helperbox_basename', plugin_basename(__FILE__));
 }
-if (!defined('helperbox_img_url')) {
-    define('helperbox_img_url', plugin_dir_url(__FILE__) . 'assets/images/');
+if (!defined('HELPERBOX_IMG_URL')) {
+    define('HELPERBOX_IMG_URL', plugin_dir_url(__FILE__) . 'assets/images/');
 }
 
 // autoload classes

@@ -89,32 +89,32 @@
                     borderRadius: '10px'
                 }
             }), [
-
+                
                 el('div', {
                     style: {
-                        marginBottom: '20px',
-                        display: 'inline-block',
-                        width: 'fit-content'
-                    }
-                },
-                    el('p', {
-                        style: {
-                            margin: '0',
-                            fontSize: '12px',
-                            fontWeight: '600',
-                            letterSpacing: '0.5px',
-                            textTransform: 'uppercase',
-                            display: 'inline-flex',
-                            padding: '4px 8px',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            gap: '10px',
-                            borderRadius: '2px',
-                            background: '#E7E7E7'
-                        }
-                    }, 'SERVICE CAROUSEL BLOCK')
-                ),
-
+						marginBottom: '20px',
+						display: 'inline-block', 
+						width: 'fit-content'      
+					}
+				},
+				    el('p', {
+				        style: {
+				            margin: '0',
+				            fontSize: '12px',
+				            fontWeight: '600',
+				            letterSpacing: '0.5px',
+				            textTransform: 'uppercase',
+				            display: 'inline-flex',
+				            padding: '4px 8px',
+				            justifyContent: 'center',
+				            alignItems: 'center',
+				            gap: '10px',
+				            borderRadius: '2px',
+				            background: '#E7E7E7'
+				        }
+				    }, 'SERVICE CAROUSEL BLOCK')
+				),
+                
 
                 // Section Heading
                 el('div', { style: { marginBottom: '20px' } }, [
@@ -176,29 +176,23 @@
 
                 // Bullet Points Repeater
                 el('div', { style: { marginBottom: '30px' } }, [
-
+                    
                     el('label', {
-                        style: {
-                            display: 'block',
+                        style: { display: 'block',
                             marginBottom: '4px',
                             fontWeight: '500',
                             fontSize: '14px',
-                            color: '#070707'
-                        }
+                            color: '#070707' }
                     }, 'Bullet Points'),
                     bulletPoints.length === 0 &&
-                    el('p', {
-                        style: {
-                            margin: 0,
+                        el('p', { style: { margin: 0,
                             fontSize: '16px',
                             border: '1px solid #AEAEAE',
                             borderRadius: '4px',
                             padding: '8px 12px',
                             backgroundColor: '#FFFFFF',
                             color: '#000',
-                            marginBottom: '12px'
-                        }
-                    }, 'No bullet points yet.'),
+                            marginBottom: '12px' } }, 'No bullet points yet.'),
                     bulletPoints.map((point, index) => el('div', {
                         key: index,
                         style: {
@@ -211,16 +205,14 @@
                             value: point,
                             onChange: val => updateBulletPoint(index, val),
                             placeholder: 'Enter bullet point text',
-                            style: {
-                                margin: 0,
-                                fontSize: '16px',
-                                border: '1px solid #AEAEAE',
-                                borderRadius: '4px',
-                                padding: '8px 12px',
-                                backgroundColor: '#FFFFFF',
-                                color: '#000',
-                                marginBottom: '12px'
-                            }
+                            style: { margin: 0,
+                            fontSize: '16px',
+                            border: '1px solid #AEAEAE',
+                            borderRadius: '4px',
+                            padding: '8px 12px',
+                            backgroundColor: '#FFFFFF',
+                            color: '#000',
+                            marginBottom: '12px'}
                         }),
                         el(Button, {
                             isDestructive: true,
@@ -240,29 +232,29 @@
                         }
                     }, 'Add Bullet Point')
                 ]),
-
+                
                 // Divider and Label
-                el('div', {}, [
-                    el('hr', {
-                        style: {
-                            borderTop: '1px solid #AEAEAE',
-                            margin: '20px 0'
-                        }
-                    }),
-                    el('p', {
-                        style: {
-                            fontSize: '20px',
-                            fontWeight: '500',
-                            marginBottom: '15px',
-                            color: '#000000'
-                        }
-                    }, 'Services')
-                ]),
+				el('div', {}, [
+					el('hr', {
+						style: {
+							borderTop: '1px solid #AEAEAE',
+							margin: '20px 0'
+						}
+					}),
+					el('p', {
+						style: {
+							fontSize: '20px',
+							fontWeight: '500',
+							marginBottom: '15px',
+							color: '#000000'
+						}
+					}, 'Services')
+				]),
 
                 // Services Repeater
                 el('div', { style: { marginBottom: '20px' } }, [
                     services.length === 0 &&
-                    el('p', { style: { fontStyle: 'italic', color: '#666' } }, 'No services added.'),
+                        el('p', { style: { fontStyle: 'italic', color: '#666' } }, 'No services added.'),
                     services.map((service, index) => el('div', {
                         key: index,
                         style: {
@@ -273,16 +265,16 @@
                             backgroundColor: '#F8F8F8'
                         }
                     }, [
-
+                        
                         // Item Counter
-                        el('div', {
-                            style: {
-                                fontWeight: '600',
-                                fontSize: '14px',
-                                marginBottom: '10px',
-                                color: '#333'
-                            }
-                        }, `Item ${index + 1}`),
+					el('div', {
+						style: {
+							fontWeight: '600',
+							fontSize: '14px',
+							marginBottom: '10px',
+							color: '#333'
+						}
+					}, `Item ${index + 1}`),
 
                         // Image Upload and Page Link in single row
                         el('div', {
@@ -322,7 +314,7 @@
                                 service.image && el('img', {
                                     src: service.image,
                                     alt: 'Service Image',
-                                    style: {
+                                    style: { 
                                         maxWidth: '50px',
                                         height: '50px',
                                         objectFit: 'cover',
@@ -330,7 +322,7 @@
                                     }
                                 })
                             ]),
-
+                            
                             // Page Link
                             el('div', {
                                 style: {
@@ -390,37 +382,37 @@
                                 }, 'page link(Optional)'),
                             ])
                         ]),
-
-                        // Section Description
-                        el('div', { style: { marginBottom: '20px' } }, [
-                            el('label', {
-                                style: {
-                                    display: 'block',
-                                    marginBottom: '4px',
-                                    fontWeight: '500',
-                                    fontSize: '14px',
-                                    color: '#070707'
-                                }
-                            }, 'Service Title'),
-                            el(RichText, {
-                                tagName: 'p',
-                                value: service.title,
-                                onChange: val => updateService(index, 'title', val),
-                                placeholder: 'Enter service title.',
-                                style: {
-                                    margin: 0,
-                                    fontSize: '16px',
-                                    border: '1px solid #AEAEAE',
-                                    borderRadius: '4px',
-                                    padding: '8px 12px',
-                                    backgroundColor: '#FFFFFF',
-                                    color: '#000',
-                                    marginBottom: '12px'
-                                }
-                            })
-                        ]),
-
-
+                        
+                            // Section Description
+                el('div', { style: { marginBottom: '20px' } }, [
+                    el('label', {
+                        style: {
+                            display: 'block',
+                            marginBottom: '4px',
+                            fontWeight: '500',
+                            fontSize: '14px',
+                            color: '#070707'
+                        }
+                    }, 'Service Title'),
+                    el(RichText, {
+                        tagName: 'p',
+                        value: service.title,
+                        onChange: val => updateService(index, 'title', val),
+                        placeholder: 'Enter service title.',
+                        style: {
+                            margin: 0,
+                            fontSize: '16px',
+                            border: '1px solid #AEAEAE',
+                            borderRadius: '4px',
+                            padding: '8px 12px',
+                            backgroundColor: '#FFFFFF',
+                            color: '#000',
+                            marginBottom: '12px'
+                        }
+                    })
+                ]),
+                        
+                        
                         el('div', {
                             style: {
                                 textAlign: 'right',

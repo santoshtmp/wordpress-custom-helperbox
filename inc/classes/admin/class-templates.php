@@ -55,7 +55,33 @@ class Templates {
     public static function get_template_helperbox_general_settings_group() {
         settings_fields('helperbox_general_settings_group'); ?>
         <table class="form-table form-table-general" table-tab="general">
+            <tr>
+                <th scope="row">
+                    <label for="helperbox_mimes_file_types">
+                        Allow File Type
+                    </label>
+                </th>
+                <td>
+                    <?php
+                    $option = Check_Settings::get_helperbox_mimes_file_types();
+                    foreach (Settings::MIMES_FILE_TYPES as $file) :
+                    ?>
+                        <label for="helperbox_mimes_file_types-<?php echo esc_attr($file['value']); ?>">
+                            <input
+                                type="checkbox"
+                                name="helperbox_mimes_file_types[]"
+                                value="<?php echo esc_attr($file['value']); ?>"
+                                id="helperbox_mimes_file_types-<?php echo esc_attr($file['value']); ?>"
+                                <?php checked(in_array($file['value'], $option, true)); ?>>
+                            <?php echo esc_html($file['label']); ?>
+                        </label>
+                    <?php endforeach; ?>
 
+                    <div class="description">
+                        <p>This will allowed extra file type extensions.</p>
+                    </div>
+                </td>
+            </tr>
             <tr>
                 <th scope="row">
                     <label for="helperbox_custom_theme_templates_dir">

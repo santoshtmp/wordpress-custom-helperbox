@@ -1,0 +1,78 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"version": "0.1.0",
+	"name": "helperbox/cover",
+	"title": "Helperbox Cover",
+	"description": "Hero cover section with heading, text and button.",
+	"category": "helperbox_blocks",
+	"icon": "dashicons-cover-image",
+	"keywords": [
+		"helperbox",
+		"cover",
+		"banner"
+	],
+	"example": {},
+	"attributes": {
+		"heading": {
+			"type": "string",
+			"default": "Never let your memories be greater than your dreams"
+		},
+		"text": {
+			"type": "string",
+			"default": "A mind that is stretched by a new experience can never go back to its old dimensions."
+		},
+		"buttonText": {
+			"type": "string",
+			"default": "Blogs"
+		},
+		"buttonUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"minHeight": {
+			"type": "number",
+			"default": 640
+		},
+		"bgImage": {
+			"type": "object",
+			"default": null
+		},
+		"defaultBg": {
+			"type": "boolean",
+			"default": true
+		},
+		"paragraphText": {
+			"type": "string",
+			"default": "<p>A mind that is stretched by a new experience can never go back to its old dimensions.</p>"
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [
+			"left",
+			"center",
+			"right",
+			"full"
+		],
+		"anchor": true,
+		"color": {
+			"text": true,
+			"background": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true
+		},
+		"typography": {
+			"fontSize": true,
+			"fontWeight": true,
+			"lineHeight": true
+		}
+	},
+	"editorScript": "cover-edit",
+	"editorStyle": "cover-editor",
+	"style": "cover-style",
+	"viewScript": "cover-view",
+	"render": "file:./render.php"
+}

@@ -32,6 +32,28 @@ class Settings {
     public const DEFAULT_CUSTOM_LOGINADMIN = 1;
     public const DEFAULT_LOGIN_BG = '#f1f1f1';
     public const DEFAULT_FORMLOGIN_BG = '#fff';
+    public const MIMES_FILE_TYPES = [
+        'svg' => [
+            'value' => 'svg',
+            'mimes_value' => 'image/svg+xml',
+            'label' => 'SVG'
+        ],
+        'json' => [
+            'value' => 'json',
+            'mimes_value' => 'application/json',
+            'label' => 'JSON'
+        ],
+        'doc' => [
+            'value' => 'doc',
+            'mimes_value' => 'application/msword',
+            'label' => 'DOC'
+        ],
+        'mp4' => [
+            'value' => 'mp4',
+            'mimes_value' => 'video/mp4',
+            'label' => 'Video MP4'
+        ],
+    ];
 
     /**
      * construction
@@ -68,6 +90,16 @@ class Settings {
         $helperbox_general_settings_group = 'helperbox_general_settings_group';
 
         // General settings
+        register_setting(
+            $helperbox_general_settings_group,
+            'helperbox_mimes_file_types',
+            [
+                'type' => 'array',
+                'sanitize_callback' => [$this, 'helperbox_sanitize_array_text_field'],
+                'default' => []
+            ]
+        );
+
         register_setting(
             $helperbox_general_settings_group,
             'helperbox_custom_theme_templates_dir',

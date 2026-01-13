@@ -105,19 +105,6 @@ class Assets {
      * @return void
      */
     public function helperbox_enqueue_block_editor_assets() {
-        /**
-         * https://developer.wordpress.org/news/2024/01/29/how-to-disable-specific-blocks-in-wordpress/
-         */
-        wp_enqueue_script(
-            'helperbox-restrict-blocks',
-            helperbox_url . 'assets/build/js/blocks/restrict-blocks.js',
-            ['wp-blocks', 'wp-dom-ready', 'wp-edit-post'],
-            filemtime(helperbox_path . 'assets/build/js/blocks/restrict-blocks.js'),
-            array(
-                'strategy' => 'defer',
-                'in_footer' => true,
-            )
-        );
     }
 
     /**
@@ -142,22 +129,22 @@ class Assets {
      */
     public function helperbox_admin_enqueue_scripts($hook) {
 
-        if (file_exists(helperbox_path . 'assets/build/css/admin.css')) {
+        if (file_exists(HELPERBOX_PATH . 'assets/build/css/admin.css')) {
             wp_enqueue_style(
                 'helperbox-admin-style',
-                helperbox_url . 'assets/build/css/admin.css',
+                HELPERBOX_URL . 'assets/build/css/admin.css',
                 [],
                 null,
                 'screen'
             );
         }
 
-        if (file_exists(helperbox_path . 'assets/build/js/admin.js')) {
+        if (file_exists(HELPERBOX_PATH . 'assets/build/js/admin.js')) {
             wp_enqueue_script(
                 'helperbox-admin-script',
-                helperbox_url . 'assets/build/js/admin.js',
+                HELPERBOX_URL . 'assets/build/js/admin.js',
                 ['jquery', 'wp-color-picker', 'media-views'],
-                filemtime(helperbox_path . 'assets/build/js/admin.js'),
+                filemtime(HELPERBOX_PATH . 'assets/build/js/admin.js'),
                 array(
                     'strategy' => 'defer',
                     'in_footer' => true,
@@ -254,20 +241,20 @@ class Assets {
         $loginstyle .= ".helperbox-login-style form{ background-color: " . esc_attr($formbgcolor) . " !important; } ";
 
         // Add style css
-        if (file_exists(helperbox_path . '/assets/build/css/login.css')) {
+        if (file_exists(HELPERBOX_PATH . '/assets/build/css/login.css')) {
             wp_enqueue_style(
                 'helperbox-login',
-                helperbox_url . '/assets/build/css/login.css'
+                HELPERBOX_URL . '/assets/build/css/login.css'
             );
         }
 
         // Add script js
-        if (file_exists(helperbox_path . '/assets/build/js/login.js')) {
+        if (file_exists(HELPERBOX_PATH . '/assets/build/js/login.js')) {
             wp_enqueue_script(
                 'helperbox-login',
-                helperbox_url . '/assets/build/js/login.js',
+                HELPERBOX_URL . '/assets/build/js/login.js',
                 ['jquery'],
-                filemtime(helperbox_path . '/assets/build/js/login.js'),
+                filemtime(HELPERBOX_PATH . '/assets/build/js/login.js'),
                 array(
                     'strategy' => 'defer',
                     'in_footer' => true,

@@ -1,0 +1,69 @@
+{
+  "apiVersion": 2,
+  "name": "helperbox/button",
+  "title": "Helperbox Button",
+  "description": "Custom Helperbox button with link, styles, and alignment",
+  "category": "helperbox_blocks",
+  "icon": "smiley",
+  "keywords": [
+    "button",
+    "helperbox",
+    "cta"
+  ],
+  "attributes": {
+    "text": {
+      "type": "string",
+      "source": "html",
+      "selector": "a",
+      "default": "Click me"
+    },
+    "url": {
+      "type": "string",
+      "source": "attribute",
+      "selector": "a",
+      "attribute": "href",
+      "default": ""
+    },
+    "opensInNewTab": {
+      "type": "boolean",
+      "default": false
+    },
+    "rel": {
+      "type": "string",
+      "default": ""
+    },
+    "align": {
+      "type": "string",
+      "default": "center"
+    },
+    "className": {
+      "type": "string"
+    }
+  },
+  "supports": {
+    "align": [
+      "left",
+      "center",
+      "right",
+      "full"
+    ],
+    "anchor": true,
+    "color": {
+      "text": true,
+      "background": true
+    },
+    "spacing": {
+      "padding": true,
+      "margin": true
+    },
+    "typography": {
+      "fontSize": true,
+      "fontWeight": true,
+      "lineHeight": true
+    }
+  },
+  "editorScript": "button-edit",
+  "editorStyle": "",
+  "style": "button-style",
+  "viewScript": "button-view"
+}
