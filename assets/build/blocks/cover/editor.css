@@ -1,1 +1,19 @@
-.wp-block-create-block-todo-list{border:1px dotted red}.helperbox-edit-media-field-group-control{margin-bottom:12px;gap:12px;display:flex;flex-wrap:wrap;flex-direction:row}
+/*!********************************************************************************************************************************************************************************************!*\
+  !*** css ../node_modules/css-loader/dist/cjs.js!../node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[2]!../node_modules/sass-loader/dist/cjs.js!./blocks/cover/editor.scss ***!
+  \********************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.wp-block-create-block-todo-list {
+  border: 1px dotted #f00;
+}
+
+.helperbox-edit-media-field-group-control {
+  margin-bottom: 12px;
+  gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}

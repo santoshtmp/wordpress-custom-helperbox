@@ -19,14 +19,7 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
  */
 import { registerBlockType } from '@wordpress/blocks';
 
-/**
- * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
- * Those files can contain any CSS code that gets applied to the editor.
- *
- * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
- */
-// import './editor.scss';
-
+const thisBlockName = 'helperbox/button';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -44,26 +37,20 @@ import { registerBlockType } from '@wordpress/blocks';
 // 	);
 // }
 
-function Edit() {
-	return (
-		<p {...useBlockProps()}>
-			{__('Button – hello from the editor!', 'todo-list')}
-			{/* BUTTON */}
-			<RichText
-				tagName="span"
-				value=""
-				placeholder={__('Enter button text…', 'helperbox')}
-				style={{ display: 'inline-block', marginBottom: '12px' }}
-			/>
-			{/* <RichText
-				tagName="span"
-				value={buttonText}
-				onChange={(value) => setAttributes({ buttonText: value })}
-				placeholder={__('Enter button text…', 'helperbox')}
-				style={{ display: 'inline-block', marginBottom: '12px' }}
-			/> */}
-		</p>
-	);
+function Edit({ attributes, setAttributes }) {
+    const { buttonText } = attributes;
+    const blockProps = useBlockProps();
+
+    return (
+        <div {...blockProps}>
+            <RichText
+                value={buttonText}
+                onChange={(value) => setAttributes({ buttonText: value })}
+                placeholder={__('Enter button text…', 'helperbox')}
+                allowedFormats={[]}
+            />
+        </div>
+    );
 }
 
 /**
@@ -72,10 +59,9 @@ function Edit() {
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
 
-const thisBlockName = 'helperbox/button';
 registerBlockType(thisBlockName, {
-	/**
-	 * @see ./edit.js
-	 */
-	edit: Edit,
+    /**
+     * @see ./edit.js
+     */
+    edit: Edit,
 });

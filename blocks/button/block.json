@@ -36,8 +36,9 @@
       "type": "string",
       "default": "center"
     },
-    "className": {
-      "type": "string"
+    "buttonText": {
+      "type": "string",
+      "default": ""
     }
   },
   "supports": {
@@ -50,7 +51,14 @@
     "anchor": true,
     "color": {
       "text": true,
-      "background": true
+      "background": true,
+      "gradients": true
+    },
+    "border": {
+      "radius": true,
+      "color": true,
+      "width": true,
+      "style": true
     },
     "spacing": {
       "padding": true,
@@ -58,10 +66,24 @@
     },
     "typography": {
       "fontSize": true,
-      "fontWeight": true,
       "lineHeight": true
     }
   },
+  "styles": [
+    {
+      "name": "none",
+      "label": "None",
+      "isDefault": true
+    },
+    {
+      "name": "fill",
+      "label": "Fill"
+    },
+    {
+      "name": "outline",
+      "label": "Outline"
+    }
+  ],
   "editorScript": "button-edit",
   "editorStyle": "",
   "style": "button-style",

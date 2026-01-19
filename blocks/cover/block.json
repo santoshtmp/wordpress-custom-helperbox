@@ -78,17 +78,7 @@
 		],
 		"anchor": true,
 		"color": {
-			"text": true,
 			"background": true
-		},
-		"spacing": {
-			"padding": true,
-			"margin": true
-		},
-		"typography": {
-			"fontSize": true,
-			"fontWeight": true,
-			"lineHeight": true
 		}
 	},
 	"editorScript": "cover-edit",

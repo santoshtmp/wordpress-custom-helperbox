@@ -327,7 +327,6 @@ function Edit({ attributes, setAttributes }) {
 					{/*  */}
 
 				</PanelBody>
-
 			</InspectorControls>
 
 			<div {...blockProps}>
@@ -347,7 +346,6 @@ function Edit({ attributes, setAttributes }) {
 		</>
 	);
 }
-
 
 /**
  * Every block starts by registering a new block type definition.
