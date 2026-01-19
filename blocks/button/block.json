@@ -1,5 +1,6 @@
 {
-  "apiVersion": 2,
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
   "name": "helperbox/button",
   "title": "Helperbox Button",
   "description": "Custom Helperbox button with link, styles, and alignment",
@@ -19,14 +20,15 @@
     },
     "url": {
       "type": "string",
-      "source": "attribute",
-      "selector": "a",
-      "attribute": "href",
       "default": ""
     },
     "opensInNewTab": {
       "type": "boolean",
       "default": false
+    },
+    "linkTarget": {
+      "type": "string",
+      "default": ""
     },
     "rel": {
       "type": "string",
@@ -42,17 +44,28 @@
     }
   },
   "supports": {
+    "html": false,
+    "anchor": true,
     "align": [
       "left",
       "center",
       "right",
+      "wide",
       "full"
     ],
-    "anchor": true,
+    "alignText": true,
     "color": {
       "text": true,
       "background": true,
-      "gradients": true
+      "gradients": true,
+      "__experimentalDefaultControls": {
+        "background": true,
+        "text": true
+      }
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true
     },
     "border": {
       "radius": true,
@@ -60,19 +73,18 @@
       "width": true,
       "style": true
     },
-    "spacing": {
-      "padding": true,
-      "margin": true
-    },
     "typography": {
       "fontSize": true,
-      "lineHeight": true
+      "lineHeight": true,
+      "__experimentalFontStyle": true,
+      "__experimentalFontWeight": true,
+      "__experimentalTextTransform": true
     }
   },
   "styles": [
     {
-      "name": "none",
-      "label": "None",
+      "name": "default",
+      "label": "Default",
       "isDefault": true
     },
     {

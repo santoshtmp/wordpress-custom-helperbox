@@ -11,13 +11,15 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, RichText } from '@wordpress/block-editor';
+import { useBlockProps, RichText, URLInputButton, URLPopover, BlockControls } from '@wordpress/block-editor';
 /**
  * Registers a new block provided a unique name and an object defining its behavior.
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
 import { registerBlockType } from '@wordpress/blocks';
+import { Button, ToolbarButton, ToolbarGroup } from '@wordpress/components';
+import { useState } from '@wordpress/element';
 
 const thisBlockName = 'helperbox/button';
 
@@ -38,20 +40,44 @@ const thisBlockName = 'helperbox/button';
 // }
 
 function Edit({ attributes, setAttributes }) {
-    const { buttonText } = attributes;
-    const blockProps = useBlockProps();
+    // const { buttonText, url, opensInNewTab } = attributes;
+    // const blockProps = useBlockProps();
+
+
+    const { buttonText, url, opensInNewTab, linkTarget, rel } = attributes;
+
+    const blockProps = useBlockProps({
+        className: 'wp-element-button helperbox-button'
+    });
 
     return (
-        <div {...blockProps}>
-            <RichText
-                value={buttonText}
-                onChange={(value) => setAttributes({ buttonText: value })}
-                placeholder={__('Enter button text…', 'helperbox')}
-                allowedFormats={[]}
-            />
-        </div>
+        <>
+            <BlockControls>
+                <ToolbarGroup>
+                    <URLInputButton
+                        url={url}
+                        onChange={(value) => setAttributes({ url: value })}
+                        onChangeOpensInNewTab={(newTab) => setAttributes({ opensInNewTab: newTab })}
+                        opensInNewTab={opensInNewTab}
+                    />
+
+                </ToolbarGroup>
+            </BlockControls>
+
+            <div {...blockProps}>
+                <RichText
+                    tagName="span"
+                    value={buttonText}
+                    onChange={(value) => setAttributes({ buttonText: value })}
+                    placeholder={__('Add button text…', 'helperbox')}
+                    allowedFormats={['core/bold', 'core/italic']}
+                    className="helperbox-button"
+                />
+            </div>
+        </>
     );
 }
+
 
 /**
  * Every block starts by registering a new block type definition.
@@ -60,8 +86,7 @@ function Edit({ attributes, setAttributes }) {
  */
 
 registerBlockType(thisBlockName, {
-    /**
-     * @see ./edit.js
-     */
+
     edit: Edit,
+    // save: Save,
 });
