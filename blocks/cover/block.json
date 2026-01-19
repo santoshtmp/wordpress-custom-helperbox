@@ -6,7 +6,7 @@
 	"title": "Helperbox Cover",
 	"description": "Hero cover section with heading, text and button.",
 	"category": "helperbox_blocks",
-	"icon": "dashicons-cover-image",
+	"icon": "cover-image",
 	"keywords": [
 		"helperbox",
 		"cover",
@@ -21,6 +21,10 @@
 		"text": {
 			"type": "string",
 			"default": "A mind that is stretched by a new experience can never go back to its old dimensions."
+		},
+		"paragraphText": {
+			"type": "string",
+			"default": "<p>A mind that is stretched by a new experience can never go back to its old dimensions.</p>"
 		},
 		"buttonText": {
 			"type": "string",
@@ -42,9 +46,26 @@
 			"type": "boolean",
 			"default": true
 		},
-		"paragraphText": {
-			"type": "string",
-			"default": "<p>A mind that is stretched by a new experience can never go back to its old dimensions.</p>"
+		"ctas": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object",
+				"properties": {
+					"text": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					},
+					"variant": {
+						"type": "string"
+					},
+					"newTab": {
+						"type": "boolean"
+					}
+				}
+			}
 		}
 	},
 	"supports": {

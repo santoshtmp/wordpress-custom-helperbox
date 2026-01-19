@@ -40,6 +40,7 @@ import {
 	RangeControl,
 	Button,
 	ToggleControl,
+	SelectControl,
 	Spinner
 } from '@wordpress/components';
 
@@ -48,6 +49,11 @@ import {
  * 
  */
 import ServerSideRender from '@wordpress/server-side-render';
+
+import { useEffect } from '@wordpress/element';
+
+// Use global jQuery from WordPress
+const $ = window.jQuery;
 
 /**
  * const variables
@@ -71,19 +77,87 @@ const thisBlockName = 'helperbox/cover';
 // }
 
 function Edit({ attributes, setAttributes }) {
-	const { heading, text, buttonText, buttonUrl, minHeight, bgImage, defaultBg, paragraphText } = attributes;
+	const {
+		heading,
+		text,
+		paragraphText,
+		minHeight,
+		bgImage,
+		defaultBg,
+		ctas = [],
+	} = attributes;
 	const imageUrl =
 		bgImage?.sizes?.large?.url ||
 		bgImage?.sizes?.medium?.url ||
 		bgImage?.url;
 	const blockProps = useBlockProps({ className: 'helperbox-cover-editor' });
 
+	/**
+	 * CTA helpers
+	 */
+	const updateCTA = (index, field, value) => {
+		const newCtas = [...ctas];
+		newCtas[index] = { ...newCtas[index], [field]: value };
+		setAttributes({ ctas: newCtas });
+	};
+
+	const addCTA = () => {
+		setAttributes({
+			ctas: [
+				...ctas,
+				{
+					text: '',
+					url: '',
+					variant: 'primary',
+					newTab: false
+				}
+			]
+		});
+	};
+
+	const removeCTA = (index) => {
+		const newCtas = ctas.filter((_, i) => i !== index);
+		setAttributes({ ctas: newCtas });
+	};
+
+	const moveCTA = (from, to) => {
+		if (to < 0 || to >= ctas.length) {
+			return;
+		}
+		const newCtas = [...ctas];
+		const temp = newCtas[from];
+		newCtas[from] = newCtas[to];
+		newCtas[to] = temp;
+		setAttributes({ ctas: newCtas });
+	};
+
+
+
+	/* =========================
+	 * Auto-remove invalid CTAs
+	 * ========================= */
+	useEffect(() => {
+		const cleaned = ctas.filter(cta => cta.text && cta.url);
+
+		if (cleaned.length !== ctas.length) {
+			setAttributes({ ctas: cleaned });
+		}
+
+	}, []);
+
+	/**
+	 * Return
+	 */
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title="Cover Settings" initialOpen>
-					{/*  MEdia upload group */}
-					<div className="helperbox-edit-media-field-group-control" style={{ marginBottom: '12px' }}>
+				{/* Cover settings  */}
+				<PanelBody title={__('Cover Settings', 'helperbox')} initialOpen>
+					{/*  Media upload group */}
+					<div
+						className="helperbox-edit-media-field-group-control"
+						style={{ marginBottom: '12px' }}
+					>
 						{/* Media preview */}
 						{imageUrl && (
 							<div className="helperbox-edit-media-preview">
@@ -144,7 +218,7 @@ function Edit({ attributes, setAttributes }) {
 					</div>
 
 					<RangeControl
-						label="Min Height"
+						label={__('Min Height', 'helperbox')}
 						value={minHeight}
 						min={300}
 						max={900}
@@ -152,30 +226,108 @@ function Edit({ attributes, setAttributes }) {
 					/>
 
 					<TextControl
-						label="Heading"
+						label={__('Heading', 'helperbox')}
 						value={heading}
 						onChange={(value) => setAttributes({ heading: value })}
 					/>
 
 					<TextareaControl
-						label="Text"
+						label={__('Text', 'helperbox')}
 						value={text}
-						onChange={(value) => setAttributes({ text: value })}
+						onChange={
+							(value) => setAttributes({ text: value })
+						}
 					/>
 
-					<TextControl
-						label="Button Text"
-						value={buttonText}
-						onChange={(value) => setAttributes({ buttonText: value })}
-					/>
+					{/* CTA buttons  */}
+					<div title={__('CTA Buttons', 'helperbox')}>
+						{ctas.map((cta, index) => (
+							<div
+								key={index}
+								style={{
+									border: '1px solid #ddd',
+									padding: '12px',
+									marginBottom: '12px',
+									borderRadius: '4px'
+								}}
+							>
+								<TextControl
+									label={__('Button Text', 'helperbox')}
+									value={cta.text}
+									help={!cta.text ? __('Button Text is required', 'helperbox') : ''}
+									__experimentalShowError={!cta.text}
+									onChange={(value) =>
+										updateCTA(index, 'text', value)
+									}
+								/>
 
-					<URLInput
-						label="Button Link"
-						value={buttonUrl}
-						onChange={(url) => setAttributes({ buttonUrl: url })}
-					/>
+								<TextControl
+									label={__('Button Link', 'helperbox')}
+									value={cta.url}
+									onChange={(url) =>
+										updateCTA(index, 'url', url)
+									}
+								/>
+
+								<SelectControl
+									label={__('Button Variant', 'helperbox')}
+									value={cta.variant}
+									options={[
+										{ label: __('Primary', 'helperbox'), value: 'primary' },
+										{ label: __('Secondary', 'helperbox'), value: 'secondary' },
+										{ label: __('Outline', 'helperbox'), value: 'outline' }
+									]}
+									onChange={(value) =>
+										updateCTA(index, 'variant', value)
+									}
+								/>
+
+
+								<ToggleControl
+									label={__('Open in new tab', 'helperbox')}
+									checked={cta.newTab}
+									onChange={(value) =>
+										updateCTA(index, 'newTab', value)
+									}
+								/>
+
+								<div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+									<Button
+										variant="secondary"
+										onClick={() => moveCTA(index, index - 1)}
+										disabled={index === 0}
+									>
+										↑
+									</Button>
+
+									<Button
+										variant="secondary"
+										onClick={() => moveCTA(index, index + 1)}
+										disabled={index === ctas.length - 1}
+									>
+										↓
+									</Button>
+
+									<Button
+										variant="secondary"
+										isDestructive
+										onClick={() => removeCTA(index)}
+									>
+										{__('Remove', 'helperbox')}
+									</Button>
+								</div>
+							</div>
+						))}
+
+						<Button variant="primary" onClick={addCTA}>
+							{__('Add CTA Button', 'helperbox')}
+						</Button>
+					</div>
+
+					{/*  */}
 
 				</PanelBody>
+
 			</InspectorControls>
 
 			<div {...blockProps}>
@@ -195,6 +347,7 @@ function Edit({ attributes, setAttributes }) {
 		</>
 	);
 }
+
 
 /**
  * Every block starts by registering a new block type definition.
