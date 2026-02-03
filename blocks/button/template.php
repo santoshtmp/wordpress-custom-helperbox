@@ -1,31 +1,27 @@
 <?php
 
-// Example dynamic content – you can customize this however you like.
-$classes = 'wp-block-my-plugin-server-block';
+/**
+ * Block attributes
+ */
+$button_text = $attributes['buttonText'] ?? '';
+$url = $attributes['url'] ?? '';
+$opens_in_new_tab = $attributes['opensInNewTab'] ?? false;
 
-if (! empty($block->classes)) {
-    $classes .= ' ' . $block->classes;
-}
+/**
+ * Wrapper attributes
+ */
+$wrapper_attributes = get_block_wrapper_attributes(['class' => 'helperbox-button-wrapper']);
 
-?>
-<div class="<?php echo esc_attr($classes); ?>">
-    <p><?php echo esc_html("This content is rendered on the server."); ?></p>
-</div>
-
-
-<?php
-$wrapper_attributes = get_block_wrapper_attributes([
-    'class' => 'helperbox-button-wrapper'
-]);
-
-$target = ! empty($attributes['opensInNewTab']) ? ' target="_blank"' : '';
-$rel    = ! empty($attributes['rel']) ? ' rel="' . esc_attr($attributes['rel']) . '"' : '';
-$url    = ! empty($attributes['url']) ? esc_url($attributes['url']) : '#';
-$text   = ! empty($attributes['text']) ? esc_html($attributes['text']) : 'Click';
+$target = $opens_in_new_tab ? ' target="_blank"' : '';
+$rel = $opens_in_new_tab ? ' rel="noreferrer noopener"' : '';
+$href = !empty($url) ? esc_url($url) : '#';
 
 ?>
-<div <?php echo $wrapper_attributes; ?>>
-    <a class="helperbox-button" href="<?php echo $url; ?>" <?php echo $target . $rel; ?>>
-        <?php echo $text; ?>
-    </a>
-</div>
+<a
+    <?php echo $wrapper_attributes; ?>
+    href="<?php echo $href; ?>"
+    class="helperbox-button"
+    <?php echo $target; ?>
+    <?php echo $rel; ?>>
+    <?php echo wp_kses_post($button_text); ?>
+</a>

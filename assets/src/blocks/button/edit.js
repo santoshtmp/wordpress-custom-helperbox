@@ -11,22 +11,17 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, RichText } from '@wordpress/block-editor';
+import { useBlockProps, RichText, URLInputButton, URLPopover, BlockControls } from '@wordpress/block-editor';
 /**
  * Registers a new block provided a unique name and an object defining its behavior.
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
 import { registerBlockType } from '@wordpress/blocks';
+import { Button, ToolbarButton, ToolbarGroup } from '@wordpress/components';
+import { useState } from '@wordpress/element';
 
-/**
- * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
- * Those files can contain any CSS code that gets applied to the editor.
- *
- * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
- */
-// import './editor.scss';
-
+const thisBlockName = 'helperbox/button';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -44,27 +39,45 @@ import { registerBlockType } from '@wordpress/blocks';
 // 	);
 // }
 
-function Edit() {
-	return (
-		<p {...useBlockProps()}>
-			{__('Button – hello from the editor!', 'todo-list')}
-			{/* BUTTON */}
-			<RichText
-				tagName="span"
-				value=""
-				placeholder={__('Enter button text…', 'helperbox')}
-				style={{ display: 'inline-block', marginBottom: '12px' }}
-			/>
-			{/* <RichText
-				tagName="span"
-				value={buttonText}
-				onChange={(value) => setAttributes({ buttonText: value })}
-				placeholder={__('Enter button text…', 'helperbox')}
-				style={{ display: 'inline-block', marginBottom: '12px' }}
-			/> */}
-		</p>
-	);
+function Edit({ attributes, setAttributes }) {
+    // const { buttonText, url, opensInNewTab } = attributes;
+    // const blockProps = useBlockProps();
+
+
+    const { buttonText, url, opensInNewTab, linkTarget, rel } = attributes;
+
+    const blockProps = useBlockProps({
+        className: 'wp-element-button helperbox-button'
+    });
+
+    return (
+        <>
+            <BlockControls>
+                <ToolbarGroup>
+                    <URLInputButton
+                        url={url}
+                        onChange={(value) => setAttributes({ url: value })}
+                        onChangeOpensInNewTab={(newTab) => setAttributes({ opensInNewTab: newTab })}
+                        opensInNewTab={opensInNewTab}
+                    />
+
+                </ToolbarGroup>
+            </BlockControls>
+
+            <div {...blockProps}>
+                <RichText
+                    tagName="span"
+                    value={buttonText}
+                    onChange={(value) => setAttributes({ buttonText: value })}
+                    placeholder={__('Add button text…', 'helperbox')}
+                    allowedFormats={['core/bold', 'core/italic']}
+                    className="helperbox-button"
+                />
+            </div>
+        </>
+    );
 }
+
 
 /**
  * Every block starts by registering a new block type definition.
@@ -72,10 +85,8 @@ function Edit() {
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
 
-const thisBlockName = 'helperbox/button';
 registerBlockType(thisBlockName, {
-	/**
-	 * @see ./edit.js
-	 */
-	edit: Edit,
+
+    edit: Edit,
+    // save: Save,
 });

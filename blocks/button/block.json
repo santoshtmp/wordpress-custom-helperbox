@@ -1,5 +1,6 @@
 {
-  "apiVersion": 2,
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
   "name": "helperbox/button",
   "title": "Helperbox Button",
   "description": "Custom Helperbox button with link, styles, and alignment",
@@ -19,14 +20,15 @@
     },
     "url": {
       "type": "string",
-      "source": "attribute",
-      "selector": "a",
-      "attribute": "href",
       "default": ""
     },
     "opensInNewTab": {
       "type": "boolean",
       "default": false
+    },
+    "linkTarget": {
+      "type": "string",
+      "default": ""
     },
     "rel": {
       "type": "string",
@@ -36,32 +38,64 @@
       "type": "string",
       "default": "center"
     },
-    "className": {
-      "type": "string"
+    "buttonText": {
+      "type": "string",
+      "default": ""
     }
   },
   "supports": {
+    "html": false,
+    "anchor": true,
     "align": [
       "left",
       "center",
       "right",
+      "wide",
       "full"
     ],
-    "anchor": true,
+    "alignText": true,
     "color": {
       "text": true,
-      "background": true
+      "background": true,
+      "gradients": true,
+      "__experimentalDefaultControls": {
+        "background": true,
+        "text": true
+      }
     },
     "spacing": {
-      "padding": true,
-      "margin": true
+      "margin": true,
+      "padding": true
+    },
+    "border": {
+      "radius": true,
+      "color": true,
+      "width": true,
+      "style": true
     },
     "typography": {
       "fontSize": true,
-      "fontWeight": true,
-      "lineHeight": true
+      "lineHeight": true,
+      "__experimentalFontStyle": true,
+      "__experimentalFontWeight": true,
+      "__experimentalTextTransform": true
     }
   },
+  "styles": [
+    {
+      "name": "default",
+      "label": "Default",
+      "isDefault": true
+    },
+    {
+      "name": "fill",
+      "label": "Fill"
+    },
+    {
+      "name": "outline",
+      "label": "Outline"
+    }
+  ],
   "editorScript": "button-edit",
   "editorStyle": "",
   "style": "button-style",

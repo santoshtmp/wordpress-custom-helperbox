@@ -17,7 +17,8 @@ if (!defined('ABSPATH')) {
 
 /* =========================
  * Block attributes
- * ========================= */
+ * =========================
+ */
 $heading   = $attributes['heading'] ?? '';
 $text      = $attributes['text'] ?? '';
 $ctas      = $attributes['ctas'] ?? [];
@@ -28,14 +29,16 @@ $defaultBg = $attributes['defaultBg'] ?? true;
 
 /* =========================
  * Background handling
- * ========================= */
+ * =========================
+ */
 if ($defaultBg && empty($bgImage)) {
     $bgImage = HELPERBOX_IMG_URL . '/patterns/cover.jpg';
 }
 
 /* =========================
  * Wrapper attributes
- * ========================= */
+ * =========================
+ */
 $style = sprintf(
     'background-image:url(%s); min-height:%dpx;',
     esc_url($bgImage),
